@@ -7,7 +7,8 @@
 #include <vector>
 
 /*
- * @brief Represents the set of functions completing the route planning algorithm.
+ * @brief Represents the set of functions completing the route planning
+ * algorithm.
  */
 class RoutePlanner {
 public:

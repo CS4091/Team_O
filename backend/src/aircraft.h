@@ -7,7 +7,8 @@
 enum class Direction { dir_NORTH, dir_SOUTH, dir_EAST, dir_WEST };
 
 /*
- * @brief Represents an Aircraft object as well as its direction and location on a GridMap
+ * @brief Represents an Aircraft object as well as its direction and location on
+ * a GridMap
  */
 class Aircraft {
 public:
