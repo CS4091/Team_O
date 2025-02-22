@@ -15,30 +15,30 @@ struct Cell {
  */
 class GridMap {
 public:
-
   /*
    * @brief Constructs a GridMap object.
    *
    * Populates the grid of Cells from a CSV file (currently hard-coded).
-   * Assumes the CSV is a rectangle
+   * The error handling strategy of this constructor is never crash on bad data,
+   * but instead convert bad data to non-traversable Cells, or truncate extra
+   * Cells in a row with too many columns.
    *
    * @param width Represents the x-dimension (number of columns) of the grid.
-   * @param height Represents the y-dimension (number of rows) of the grid.
    *
    * @return Nothing.
    */
-  GridMap(int width, int height); 
-                                 
+  GridMap(int width);
+
   bool isTraversable(int xCoord, int yCoord) const;
   void markScanned(int xCoord, int yCoord);
   // Think of other needed functions
 
   /*
-   * @brief Prints the grid map to the terminal. 
+   * @brief Prints the grid map to the terminal.
    *
    * Utility function to ensure the vector of vectors is loading properly.
    *
-   * @return Nothing. 
+   * @return Nothing.
    */
   void printer();
 
