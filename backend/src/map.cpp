@@ -1,13 +1,16 @@
 #include "map.h"
+#include <cstddef>
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <stdexcept>
+#include <string>
+#include <vector>
 
-#define NONTRAVERSABLE 0
-#define TRAVERSABLE 1
+enum { NONTRAVERSABLE = 0, TRAVERSABLE = 1 };
 
-// These helper functions are put in an anonymous namespace tells the compiler
-// to keep them visible only in this file
+// These helper functions are put in an anonymous namespace which tells the
+// compiler to keep them visible only in this file
 namespace {
 
 /*
@@ -57,8 +60,8 @@ void nonNumericError(std::string const val, int const rowCount,
 }
 
 /*
- * @breif Helper function for the GirdMap constructor, enforcing each row to be
- * the proper width.
+ * @breif Helper function for the GridMap constructor, enforcing each row to
+ * be the proper width.
  *
  * @param rowVector The row being checked.
  * @param xSize The proper width of a row.
@@ -88,34 +91,33 @@ void rowVectorValidation(std::vector<Cell> &rowVector, const int xSize,
 }
 } // namespace
 
-GridMap::GridMap(int width) {
-  // Assign grid width to class private member
-  xSize = width;
-
+GridMap::GridMap(int width, std::string filePath) : xSize(width) {
   // Holds the input CSV
   std::ifstream inputFile;
 
-  // TODO: This hard-coded file path will need to be updated to account for
-  // however the file will be passed in from python. I'm guessing it will be a
-  // parameter of the constructor.
-  inputFile.open("/home/ethan/Code/Team_O/grid_world.csv");
+  // TODO: Figure out how to properly handle this when python is calling the
+  // constructor
+  inputFile.open(filePath); // flawfinder: ignore
 
-  std::string line, val;
+  std::string line;
+  std::string val;
   int rowCount = 0;
 
   // Iterate over each line of the csv file
   while (std::getline(inputFile, line)) {
     std::vector<Cell> rowVector;
-    std::stringstream s(line);
+    std::stringstream curLine(line);
     int colCount = 0;
 
     // For each value in the line...
-    while (getline(s, val, ',')) {
+    while (getline(curLine, val, ',')) {
       // Convert the value to a Cell that is unscanned
-      Cell cell;
+      Cell cell{};
+      cell.scanned = false;
+      // Then determine if it is travesable or not
       try {
-        int cellValue = std::stoi(val);
-        // If it isn't a 1 or 0, make it non-traversable
+        const int cellValue = std::stoi(val);
+        // If it isn't a 1 or 0, make it nontraversable
         if (cellValue != TRAVERSABLE && cellValue != NONTRAVERSABLE) {
           numericError(val, rowCount, colCount, cell);
         } else {
@@ -126,7 +128,6 @@ GridMap::GridMap(int width) {
       } catch (const std::invalid_argument &) {
         nonNumericError(val, rowCount, colCount, cell);
       }
-      cell.scanned = false;
       // Append it to the current rowVector
       rowVector.push_back(cell);
       colCount++;
@@ -151,7 +152,7 @@ void GridMap::printer() {
     // For each column...
     for (int column = 0; column < ySize; column++) {
       // Construct a Cell from the grid
-      Cell outcell = grid[row][column];
+      const Cell outcell = grid[row][column];
       // Print whether the Cell is traversable (1 for yes, 0 for no)
       std::cout << outcell.traversable;
     }

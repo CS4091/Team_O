@@ -1,5 +1,5 @@
-#ifndef MAP
-#define MAP
+#ifndef AIRCRAFT
+#define AIRCRAFT
 
 #include "map.h"
 
