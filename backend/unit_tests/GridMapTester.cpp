@@ -1,7 +1,7 @@
 #include "../src/map.h"
 #include <gtest/gtest.h>
 
-TEST(GridMapTest, ValidCSV) {
+TEST(GridMapTest, ValidCSVTest) {
   // Create a GridMap with width 3 and expected height 2.
   GridMap gridMap(3, "test_csv/validCSV.csv");
 
@@ -22,10 +22,10 @@ TEST(GridMapTest, ValidCSV) {
   EXPECT_FALSE(gridMap.getCell(0, 2).scanned);
   EXPECT_FALSE(gridMap.getCell(1, 0).scanned);
   EXPECT_FALSE(gridMap.getCell(1, 1).scanned);
-  EXPECT_FALSE(gridMap.getCell(1, 3).scanned);
+  EXPECT_FALSE(gridMap.getCell(1, 2).scanned);
 }
 
-TEST(GridMapTest, CSVWithBadNumericValue) {
+TEST(GridMapTest, CSVWithBadNumericValueTest) {
   // Create a GridMap with width 3 and expected height 1.
   GridMap gridMap(3, "test_csv/badNumericCSV.csv");
 
@@ -43,7 +43,7 @@ TEST(GridMapTest, CSVWithBadNumericValue) {
   EXPECT_FALSE(gridMap.getCell(0, 2).scanned);
 }
 
-TEST(GridMapTest, CSVWithNonNumericValue) {
+TEST(GridMapTest, CSVWithNonNumericValueTest) {
   // Create a GridMap with width 3 and expected height 1.
   GridMap gridMap(3, "test_csv/badNonNumericCSV.csv");
 
@@ -61,7 +61,7 @@ TEST(GridMapTest, CSVWithNonNumericValue) {
   EXPECT_FALSE(gridMap.getCell(0, 2).scanned);
 }
 
-TEST(GridMapTest, RowVectorPadding) {
+TEST(GridMapTest, RowVectorPaddingTest) {
   // Create a GridMap with width 3 and expected height 1.
   GridMap gridMap(3, "test_csv/CSVNeedingPadding.csv");
 
@@ -79,7 +79,7 @@ TEST(GridMapTest, RowVectorPadding) {
   EXPECT_FALSE(gridMap.getCell(0, 2).scanned);
 }
 
-TEST(GridMapTest, RowVectorTruncation) {
+TEST(GridMapTest, RowVectorTruncationTest) {
   // Create a GridMap with width 3 and expected height 1.
   GridMap gridMap(3, "test_csv/CSVNeedingTruncation.csv");
 
@@ -96,4 +96,47 @@ TEST(GridMapTest, RowVectorTruncation) {
   EXPECT_FALSE(gridMap.getCell(0, 0).scanned);
   EXPECT_FALSE(gridMap.getCell(0, 1).scanned);
   EXPECT_FALSE(gridMap.getCell(0, 2).scanned);
+}
+
+TEST(GridMapTest, gridGetterTest) {
+  // Create a GridMap with width 3 and expected height 2.
+  GridMap gridMap(3, "test_csv/validCSV.csv");
+
+  // Verify cell values.
+  EXPECT_TRUE(gridMap.getCell(0, 0).traversable);    // 1
+  EXPECT_FALSE(gridMap.getCell(0, 1).traversable);   // 0
+  EXPECT_FALSE(gridMap.getCell(99, 99).traversable); // Cell doesn't exist
+
+  EXPECT_FALSE(gridMap.getCell(0, 0).scanned);
+  EXPECT_FALSE(gridMap.getCell(0, 1).scanned);
+  EXPECT_FALSE(gridMap.getCell(99, 99).scanned);
+}
+
+TEST(GridMapTest, gridTraversabilityTest) {
+  // Create a GridMap with width 3 and expected height 2.
+  GridMap gridMap(3, "test_csv/validCSV.csv");
+
+  // Verify cell values.
+  EXPECT_TRUE(gridMap.isTraversable(0, 0));    // 1
+  EXPECT_FALSE(gridMap.isTraversable(0, 1));   // 0
+  EXPECT_FALSE(gridMap.isTraversable(99, 99)); // Cell doesn't exist
+}
+
+TEST(GridMapTest, gridScannedTest) {
+  // Create a GridMap with width 3 and expected height 2.
+  GridMap gridMap(3, "test_csv/validCSV.csv");
+
+  // Verify cell values.
+  EXPECT_FALSE(gridMap.isScanned(0, 0)); // unscanned by default
+  EXPECT_FALSE(
+      gridMap.isScanned(99, 99)); // doesnt exist, should return unscanned
+
+  gridMap.markScanned(0, 0);
+  EXPECT_TRUE(gridMap.isScanned(0, 0));
+
+  gridMap.markScanned(
+      99, 99); // doesnt exist, should print a warning rather than crashing
+
+  gridMap.markScanned(0, 0); // already scanned, should print a note to terminal
+  EXPECT_TRUE(gridMap.isScanned(0, 0)); // scanned value should not change
 }

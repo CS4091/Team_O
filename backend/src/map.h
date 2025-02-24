@@ -12,7 +12,7 @@ struct Cell {
 };
 
 /*
- * @brief Represents a 2D grid map loaded from a CSV file.
+ * @brief Represents a 2D rectangular grid map loaded from a CSV file.
  *
  * The GridMap is stored as a vector of Cell vectors.
  */
@@ -33,9 +33,31 @@ public:
    */
   GridMap(int width, std::string filePath);
 
-  bool isTraversable(int xCoord, int yCoord) const;
-  void markScanned(int xCoord, int yCoord);
-  // Think of other needed functions
+  /*
+   * @brief Used to determine if a Cell is traversable.
+   *
+   * @return True if the Cell at grid[row][column] exists and is traversable,
+   * else false.
+   */
+  bool isTraversable(int row, int column) const;
+  /*
+   * @brief Used to determine if a Cell has been scanned.
+   *
+   * @return True if the Cell at grid[row][column] exists and is scanned, else
+   * false.
+   */
+  bool isScanned(int row, int column) const;
+  /*
+   * @brief Marks a Cell as scanned.
+   *
+   * If the Cell was already scanned, it remains scanned and a note is printed.
+   * If the Cell does not exist, a warning is printed and the grid does not
+   * change.
+   *
+   * @return Nothing.
+   */
+  void markScanned(int row, int column);
+  // TODO: Think of other needed functions
 
   /*
    * @brief Prints the grid map to the terminal.
@@ -46,30 +68,31 @@ public:
    */
   void printer();
   /*
-   * @brief Getter for the y-dimension (number of columns) of the grid.
+   * @brief Getter for the y-dimension (number of rows) of the grid.
    *
-   * @return The y-dimension (number of columns) of the grid.
+   * @return The y-dimension (number of rows) of the grid.
    */
   int getYSize() const { return ySize; }
   /*
-   * @brief Getter for the x-dimension (number of rows) of the grid.
+   * @brief Getter for the x-dimension (number of columns) of the grid.
    *
-   * @return The x-dimension (number of rows) of the grid.
+   * @return The x-dimension (number of columns) of the grid.
    */
   int getXSize() const { return xSize; }
   /*
    * @brief Getter for a Cell at a specifc location.
    *
-   * @note No error handling for out of bounds.
+   * @note If a Cell is requested out of bounds, a warning is printed and a
+   * dummy Cell is returned with all false values.
    *
-   * @return The Cell at the requested location.
+   * @return The Cell at grid[row][column].
    */
-  Cell getCell(int xCoord, int yCoord) { return grid[xCoord][yCoord]; }
+  Cell getCell(int row, int column);
 
 private:
-  std::vector<std::vector<Cell>> grid;
-  int xSize;
-  int ySize;
+  std::vector<std::vector<Cell>> grid; // 0-indexed vector of vectors
+  int xSize = 0;                       // 1-indexed grid column count
+  int ySize = 0;                       // 1-indexed grid row count
 };
 
 #endif

@@ -30,7 +30,7 @@ void numericError(std::string const val, int const rowCount, int const colCount,
   // Print a warning to the terminal
   std::cerr << "Warning: Unexpected numeric value '" << val << "' at row "
             << rowCount << ", column " << colCount
-            << ". Defaulting to non-traversable cell." << std::endl;
+            << ". Defaulting to non-traversable cell.\n";
 
   // Make the Cell non-traversable
   cell.traversable = false;
@@ -53,7 +53,7 @@ void nonNumericError(std::string const val, int const rowCount,
   // Print a warning to the terminal
   std::cerr << "Warning: Non-numeric value '" << val << "', at row " << rowCount
             << ", column " << colCount
-            << ". Defaulting to non-traversable cell." << std::endl;
+            << ". Defaulting to non-traversable cell.\n";
 
   // Make the Cell non-traversable
   cell.traversable = false;
@@ -79,12 +79,11 @@ void rowVectorValidation(std::vector<Cell> &rowVector, const int xSize,
     // If it is too short...
     if (rowVector.size() < static_cast<size_t>(xSize)) {
       // Pad it with extra non-traversable Cells
-      std::cerr << "Padding missing cells with non-traversable values."
-                << std::endl;
+      std::cerr << "Padding missing cells with non-traversable values.\n";
       rowVector.resize(xSize, Cell{false, false});
     } else {
       // Else, truncate the extra columns
-      std::cerr << "Truncating extra columns." << std::endl;
+      std::cerr << "Truncating extra columns.\n";
       rowVector.resize(xSize);
     }
   }
@@ -157,4 +156,78 @@ void GridMap::printer() {
       std::cout << outcell.traversable;
     }
   }
+}
+
+bool GridMap::isTraversable(int row, int column) const {
+  // Determine the coordinates are properly bounded
+  if (row >= ySize || column >= xSize) {
+    // If they arent, print a warning and return false
+    std::cerr << "Warning: Requested a Cell at [" << row << "][" << column
+              << "], but grid only has " << ySize - 1 << " row(s) and "
+              << xSize - 1
+              << " column(s). Returning false to avoid a "
+                 "crash.\n";
+    return false;
+  }
+
+  // Else return the Cell's traverability value
+  return grid[row][column].traversable;
+}
+
+bool GridMap::isScanned(int row, int column) const {
+  // Determine the coordinates are properly bounded
+  if (row >= ySize || column >= xSize) {
+    // If they arent, print a warning and return false
+    std::cerr << "Warning: Requested a Cell at [" << row << "][" << column
+              << "], but grid only has " << ySize - 1 << " row(s) and "
+              << xSize - 1
+              << " column(s). Returning false to avoid a "
+                 "crash.\n";
+    return false;
+  }
+
+  // Else return the Cell's scanned value
+  return grid[row][column].scanned;
+}
+
+void GridMap::markScanned(int row, int column) {
+  // Determine the coordinates are properly bounded
+  if (row >= ySize || column >= xSize) {
+    // If they arent, print a warning
+    std::cerr << "Warning: Requested a Cell at [" << row << "][" << column
+              << "], but grid only has " << ySize - 1 << " row(s) and "
+              << xSize - 1
+              << " column(s). Returning early to avoid a "
+                 "crash.\n";
+    return;
+  }
+
+  // Else, determine if the Cell was already scanned
+  if (grid[row][column].scanned) {
+    // If so, print a note and leave it be
+    std::cerr << "Note: Requested a Cell at [" << row << "][" << column
+              << "] is already scanned\n";
+    return;
+  }
+
+  // Else, mark it as scanned
+  grid[row][column].scanned = true;
+}
+
+Cell GridMap::getCell(int row, int column) {
+  // Determine the coordinates are properly bounded
+  if (row >= ySize || column >= xSize) {
+    // If they arent, print a warning and return a dummy Cell
+    std::cerr << "Warning: Requested a Cell at [" << row << "][" << column
+              << "], but grid only has " << ySize - 1 << " row(s) and "
+              << xSize - 1
+              << " column(s). Returning a non-traversable, unscanned dummy "
+                 "Cell to avoid a "
+                 "crash.\n";
+    Cell cell{false, false};
+    return cell;
+  }
+
+  // Else return the Cell
+  return grid[row][column];
 }

@@ -12,13 +12,13 @@
  */
 class RoutePlanner {
 public:
-  RoutePlanner(GridMap &map, Aircraft &aircraft);
+  RoutePlanner(GridMap map, Aircraft aircraft);
 
   std::vector<std::string> findRoute();
 
 private:
-  GridMap &map;
-  Aircraft &aircraft;
+  GridMap map;
+  Aircraft aircraft;
 };
 
 #endif
