@@ -1,4 +1,5 @@
 #include "map.h"
+#include <cassert>
 #include <cstddef>
 #include <fstream>
 #include <iostream>
@@ -159,6 +160,8 @@ void GridMap::printer() {
 }
 
 bool GridMap::isTraversable(int row, int column) const {
+  assert(row > -1 && column > -1);
+
   // Determine the coordinates are properly bounded
   if (row >= ySize || column >= xSize) {
     // If they arent, print a warning and return false
@@ -175,6 +178,8 @@ bool GridMap::isTraversable(int row, int column) const {
 }
 
 bool GridMap::isScanned(int row, int column) const {
+  assert(row > -1 && column > -1);
+
   // Determine the coordinates are properly bounded
   if (row >= ySize || column >= xSize) {
     // If they arent, print a warning and return false
@@ -191,6 +196,8 @@ bool GridMap::isScanned(int row, int column) const {
 }
 
 void GridMap::markScanned(int row, int column) {
+  assert(row > -1 && column > -1);
+
   // Determine the coordinates are properly bounded
   if (row >= ySize || column >= xSize) {
     // If they arent, print a warning
@@ -215,6 +222,8 @@ void GridMap::markScanned(int row, int column) {
 }
 
 Cell GridMap::getCell(int row, int column) {
+  assert(row > -1 && column > -1);
+
   // Determine the coordinates are properly bounded
   if (row >= ySize || column >= xSize) {
     // If they arent, print a warning and return a dummy Cell
