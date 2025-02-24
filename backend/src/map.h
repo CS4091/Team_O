@@ -39,8 +39,7 @@ public:
    * @param row The row (y coordinate) being accessed.
    * @param column the column (x coordinate) being accessed.
    *
-   * @return True if the Cell at grid[row][column] exists and is traversable,
-   * else false.
+   * @return True if the Cell at grid[row][column] is traversable
    */
   bool isTraversable(int row, int column) const;
   /*
@@ -49,16 +48,13 @@ public:
    * @param row The row (y coordinate) being accessed.
    * @param column the column (x coordinate) being accessed.
    *
-   * @return True if the Cell at grid[row][column] exists and is scanned, else
-   * false.
+   * @return True if the Cell at grid[row][column] is scanned
    */
   bool isScanned(int row, int column) const;
   /*
    * @brief Marks a Cell as scanned.
    *
    * If the Cell was already scanned, it remains scanned and a note is printed.
-   * If the Cell does not exist, a warning is printed and the grid does not
-   * change.
    *
    * @param row The row (y coordinate) being accessed.
    * @param column the column (x coordinate) being accessed.
@@ -90,9 +86,6 @@ public:
   int getXSize() const { return xSize; }
   /*
    * @brief Getter for a Cell at a specifc location.
-   *
-   * @note If a Cell is requested out of bounds, a warning is printed and a
-   * dummy Cell is returned with all false values.
    *
    * @param row The row (y coordinate) being accessed.
    * @param column the column (x coordinate) being accessed.

@@ -23,6 +23,14 @@ TEST(GridMapTest, ValidCSVTest) {
   EXPECT_FALSE(gridMap.getCell(1, 0).scanned);
   EXPECT_FALSE(gridMap.getCell(1, 1).scanned);
   EXPECT_FALSE(gridMap.getCell(1, 2).scanned);
+
+  // Fail assertion on attempting to access non existent cell
+  EXPECT_DEATH(gridMap.getCell(99, 99), "^.*$");
+}
+
+TEST(GridMapTest, NoCSV) {
+  // Try to construct GridMap from nonexistent CSV
+  EXPECT_THROW(GridMap gridMap(1, "IDontExist.csv"), std::exception);
 }
 
 TEST(GridMapTest, CSVWithBadNumericValueTest) {
@@ -98,45 +106,19 @@ TEST(GridMapTest, RowVectorTruncationTest) {
   EXPECT_FALSE(gridMap.getCell(0, 2).scanned);
 }
 
-TEST(GridMapTest, gridGetterTest) {
-  // Create a GridMap with width 3 and expected height 2.
-  GridMap gridMap(3, "test_csv/validCSV.csv");
-
-  // Verify cell values.
-  EXPECT_TRUE(gridMap.getCell(0, 0).traversable);    // 1
-  EXPECT_FALSE(gridMap.getCell(0, 1).traversable);   // 0
-  EXPECT_FALSE(gridMap.getCell(99, 99).traversable); // Cell doesn't exist
-
-  EXPECT_FALSE(gridMap.getCell(0, 0).scanned);
-  EXPECT_FALSE(gridMap.getCell(0, 1).scanned);
-  EXPECT_FALSE(gridMap.getCell(99, 99).scanned);
-}
-
-TEST(GridMapTest, gridTraversabilityTest) {
-  // Create a GridMap with width 3 and expected height 2.
-  GridMap gridMap(3, "test_csv/validCSV.csv");
-
-  // Verify cell values.
-  EXPECT_TRUE(gridMap.isTraversable(0, 0));    // 1
-  EXPECT_FALSE(gridMap.isTraversable(0, 1));   // 0
-  EXPECT_FALSE(gridMap.isTraversable(99, 99)); // Cell doesn't exist
-}
-
 TEST(GridMapTest, gridScannedTest) {
   // Create a GridMap with width 3 and expected height 2.
   GridMap gridMap(3, "test_csv/validCSV.csv");
 
   // Verify cell values.
   EXPECT_FALSE(gridMap.isScanned(0, 0)); // unscanned by default
-  EXPECT_FALSE(
-      gridMap.isScanned(99, 99)); // doesnt exist, should return unscanned
 
   gridMap.markScanned(0, 0);
   EXPECT_TRUE(gridMap.isScanned(0, 0));
 
-  gridMap.markScanned(
-      99, 99); // doesnt exist, should print a warning rather than crashing
-
   gridMap.markScanned(0, 0); // already scanned, should print a note to terminal
   EXPECT_TRUE(gridMap.isScanned(0, 0)); // scanned value should not change
+
+  // Fail assertion on attempting to access non existent cell
+  EXPECT_DEATH(gridMap.markScanned(99, 99), "^.*$");
 }

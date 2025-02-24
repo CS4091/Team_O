@@ -99,6 +99,11 @@ GridMap::GridMap(int width, std::string filePath) : xSize(width) {
   // constructor
   inputFile.open(filePath); // flawfinder: ignore
 
+  // If the file isn't opened, exit with uncaught exception
+  if (!inputFile.is_open()) {
+    throw std::exception();
+  }
+
   std::string line;
   std::string val;
   int rowCount = 0;
@@ -147,10 +152,10 @@ GridMap::GridMap(int width, std::string filePath) : xSize(width) {
 
 void GridMap::printer() {
   // For each row...
-  for (int row = 0; row < xSize; row++) {
+  for (int row = 0; row < ySize; row++) {
     std::cout << std::endl;
     // For each column...
-    for (int column = 0; column < ySize; column++) {
+    for (int column = 0; column < xSize; column++) {
       // Construct a Cell from the grid
       const Cell outcell = grid[row][column];
       // Print whether the Cell is traversable (1 for yes, 0 for no)
@@ -160,56 +165,26 @@ void GridMap::printer() {
 }
 
 bool GridMap::isTraversable(int row, int column) const {
-  assert(row > -1 && column > -1);
+  assert(row > -1 && column > -1 && "Attempted to access negative index");
+  assert(row < ySize && column < xSize && "Attempted out of bounds access");
 
-  // Determine the coordinates are properly bounded
-  if (row >= ySize || column >= xSize) {
-    // If they arent, print a warning and return false
-    std::cerr << "Warning: Requested a Cell at [" << row << "][" << column
-              << "], but grid only has " << ySize - 1 << " row(s) and "
-              << xSize - 1
-              << " column(s). Returning false to avoid a "
-                 "crash.\n";
-    return false;
-  }
-
-  // Else return the Cell's traverability value
+  // Return the Cell's traverability value
   return grid[row][column].traversable;
 }
 
 bool GridMap::isScanned(int row, int column) const {
-  assert(row > -1 && column > -1);
+  assert(row > -1 && column > -1 && "Attempted to access negative index");
+  assert(row < ySize && column < xSize && "Attempted out of bounds access");
 
-  // Determine the coordinates are properly bounded
-  if (row >= ySize || column >= xSize) {
-    // If they arent, print a warning and return false
-    std::cerr << "Warning: Requested a Cell at [" << row << "][" << column
-              << "], but grid only has " << ySize - 1 << " row(s) and "
-              << xSize - 1
-              << " column(s). Returning false to avoid a "
-                 "crash.\n";
-    return false;
-  }
-
-  // Else return the Cell's scanned value
+  // Return the Cell's scanned value
   return grid[row][column].scanned;
 }
 
 void GridMap::markScanned(int row, int column) {
-  assert(row > -1 && column > -1);
+  assert(row > -1 && column > -1 && "Attempted to access negative index");
+  assert(row < ySize && column < xSize && "Attempted out of bounds access");
 
-  // Determine the coordinates are properly bounded
-  if (row >= ySize || column >= xSize) {
-    // If they arent, print a warning
-    std::cerr << "Warning: Requested a Cell at [" << row << "][" << column
-              << "], but grid only has " << ySize - 1 << " row(s) and "
-              << xSize - 1
-              << " column(s). Returning early to avoid a "
-                 "crash.\n";
-    return;
-  }
-
-  // Else, determine if the Cell was already scanned
+  // Determine if the Cell was already scanned
   if (grid[row][column].scanned) {
     // If so, print a note and leave it be
     std::cerr << "Note: Requested a Cell at [" << row << "][" << column
@@ -222,21 +197,9 @@ void GridMap::markScanned(int row, int column) {
 }
 
 Cell GridMap::getCell(int row, int column) {
-  assert(row > -1 && column > -1);
+  assert(row > -1 && column > -1 && "Attempted to access negative index");
+  assert(row < ySize && column < xSize && "Attempted out of bounds access");
 
-  // Determine the coordinates are properly bounded
-  if (row >= ySize || column >= xSize) {
-    // If they arent, print a warning and return a dummy Cell
-    std::cerr << "Warning: Requested a Cell at [" << row << "][" << column
-              << "], but grid only has " << ySize - 1 << " row(s) and "
-              << xSize - 1
-              << " column(s). Returning a non-traversable, unscanned dummy "
-                 "Cell to avoid a "
-                 "crash.\n";
-    Cell cell{false, false};
-    return cell;
-  }
-
-  // Else return the Cell
+  // Return the Cell
   return grid[row][column];
 }
