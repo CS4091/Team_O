@@ -1,0 +1,30 @@
+name: Flawfinder
+
+on: [push, pull_request]
+
+jobs:
+  Static_Analysis:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Install flawfinder
+      run: sudo apt-get install flawfinder
+
+    - name: Run flawfinder and generate report
+      run: flawfinder --context backend/src/. > flawfinder_report.txt
+
+    - name: Check if passing
+      run: |
+        if ! grep -Fq "No hits found" flawfinder_report.txt; then
+          echo "'No hits found' not in flawfinder_report.txt, failing pipeline."
+          exit 1
+        fi
+
+    - name: Upload flawfinder report
+      uses: actions/upload-artifact@v3
+      with:
+        name: flawfinder-report
+        path: flawfinder_report.txt
