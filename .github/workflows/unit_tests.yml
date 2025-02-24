@@ -3,7 +3,7 @@ name: Unit_Tests
 on: [push, pull_request]
 
 jobs:
-  Static_Analysis:
+  Dynamic_Analysis:
     runs-on: ubuntu-latest
 
     steps:
@@ -14,7 +14,7 @@ jobs:
         run: sudo apt-get install -y g++ libgtest-dev 
 
       - name: Build and run unit tests 
+        working-directory: backend/unit_tests
         run: |
-          cd unit_tests
           g++ -std=c++14 GridMapTester.cpp ../src/*.cpp -lgtest_main -lgtest -Isrc/.
           ./a.out
