@@ -1,0 +1,42 @@
+name: Clang Format Check
+
+on: [push, pull_request]
+
+jobs:
+  clang-format:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout the code
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Step 2: Install clang-format
+    - name: Install clang-format
+      run: sudo apt-get install -y clang-format
+
+    # Step 3: Run clang-format in check mode
+    - name: Run clang-format
+      run: |
+        # Run clang-format on each file and check if it needs formatting
+        for FILE in backend/src/*.cpp ; do
+          clang-format --style=LLVM "${FILE}" > formatted_file
+          
+          # Compare the original file and the formatted output
+          if ! cmp -s "${FILE}" formatted_file; then
+            echo "::error ${FILE} is not formatted correctly."
+            diff --unified=3 ${FILE} formatted_file | head -n 10
+            exit 1
+          fi
+        done
+
+        for FILE in backend/src/*.h ; do
+          clang-format --style=LLVM "${FILE}" > formatted_file
+          
+          # Compare the original file and the formatted output
+          if ! cmp -s "${FILE}" formatted_file; then
+            echo "::error ${FILE} is not formatted correctly."
+            diff --unified=3 ${FILE} formatted_file | head -n 10
+            exit 1
+          fi
+        done

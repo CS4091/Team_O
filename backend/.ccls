@@ -1,0 +1,13 @@
+%cpp -std=c++11 -Wall -Wextra
+%h -std=c++11 -Wall -Wextra 
+
+-I./backend/src
+
+-I/usr/include/c++/14
+-I/usr/include/x86_64-linux-gnu/c++/14
+-I/usr/include/c++/14/backward
+-I/usr/lib/gcc/x86_64-linux-gnu/14/include
+-I/usr/local/include
+-I/usr/include/x86_64-linux-gnu
+-I/usr/include
+
