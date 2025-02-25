@@ -13,7 +13,7 @@ enum class Direction { dir_NORTH, dir_SOUTH, dir_EAST, dir_WEST };
 class Aircraft {
 public:
   Aircraft(int startRow, Direction startDir, int startCol, GridMap map)
-      : curRow(startRow), curCol(startCol), dir(startDir), map(map) {}
+      : m_curRow(startRow), m_curCol(startCol), m_dir(startDir), m_map(map) {}
 
   bool moveForward();
   void turnLeft();
@@ -23,9 +23,9 @@ public:
   // TODO: whatever other functions are needed
 
 private:
-  int curRow, curCol;
-  Direction dir;
-  GridMap map;
+  int m_curRow, m_curCol;
+  Direction m_dir;
+  GridMap m_map;
 };
 
 #endif

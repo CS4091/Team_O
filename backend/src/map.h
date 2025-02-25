@@ -77,13 +77,13 @@ public:
    *
    * @return The y-dimension (number of rows) of the grid.
    */
-  int getYSize() const { return ySize; }
+  int getRowCount() const { return m_rowCount; }
   /*
    * @brief Getter for the x-dimension (number of columns) of the grid.
    *
    * @return The x-dimension (number of columns) of the grid.
    */
-  int getXSize() const { return xSize; }
+  int getColCount() const { return m_colCount; }
   /*
    * @brief Getter for a Cell at a specifc location.
    *
@@ -95,9 +95,9 @@ public:
   Cell getCell(int row, int column);
 
 private:
-  std::vector<std::vector<Cell>> grid; // 0-indexed vector of vectors
-  int xSize = 0;                       // 1-indexed grid column count
-  int ySize = 0;                       // 1-indexed grid row count
+  std::vector<std::vector<Cell>> m_grid; // 0-indexed vector of vectors
+  int m_colCount = 0;                    // 1-indexed grid column count
+  int m_rowCount = 0;                    // 1-indexed grid row count
 };
 
 #endif

@@ -3,23 +3,9 @@
     "arguments": [
       "/usr/bin/g++",
       "-c",
-      "-g3",
       "-Wall",
       "-Wextra",
-      "-I../src",
-      "unit_tests/GridMapConstructorTest.cpp"
-    ],
-    "directory": "/home/ethan/Code/Team_O/backend",
-    "file": "/home/ethan/Code/Team_O/backend/unit_tests/GridMapConstructorTest.cpp"
-  },
-  {
-    "arguments": [
-      "/usr/bin/g++",
-      "-c",
-      "-g3",
-      "-Wall",
-      "-Wextra",
-      "-I../src",
+      "-std=c++14",
       "src/map.cpp"
     ],
     "directory": "/home/ethan/Code/Team_O/backend",
@@ -29,13 +15,12 @@
     "arguments": [
       "/usr/bin/g++",
       "-c",
-      "-g3",
       "-Wall",
       "-Wextra",
-      "-I../src",
-      "src/testMain.cpp"
+      "-std=c++14",
+      "unit_tests/GridMapTester.cpp"
     ],
     "directory": "/home/ethan/Code/Team_O/backend",
-    "file": "/home/ethan/Code/Team_O/backend/src/testMain.cpp"
+    "file": "/home/ethan/Code/Team_O/backend/unit_tests/GridMapTester.cpp"
   }
 ]

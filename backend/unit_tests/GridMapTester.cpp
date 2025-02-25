@@ -6,8 +6,8 @@ TEST(GridMapTest, ValidCSVTest) {
   GridMap gridMap(3, "test_csv/validCSV.csv");
 
   // Check that the grid has the correct dimensions.
-  ASSERT_EQ(gridMap.getYSize(), 2);
-  ASSERT_EQ(gridMap.getXSize(), 3);
+  ASSERT_EQ(gridMap.getRowCount(), 2);
+  ASSERT_EQ(gridMap.getColCount(), 3);
 
   // Verify cell values.
   EXPECT_TRUE(gridMap.getCell(0, 0).traversable);  // 1
@@ -38,8 +38,8 @@ TEST(GridMapTest, CSVWithBadNumericValueTest) {
   GridMap gridMap(3, "test_csv/badNumericCSV.csv");
 
   // Check that the grid has the correct dimensions.
-  ASSERT_EQ(gridMap.getYSize(), 1);
-  ASSERT_EQ(gridMap.getXSize(), 3);
+  ASSERT_EQ(gridMap.getRowCount(), 1);
+  ASSERT_EQ(gridMap.getColCount(), 3);
 
   // verify Cell values.
   EXPECT_TRUE(gridMap.getCell(0, 0).traversable);  // 1
@@ -56,8 +56,8 @@ TEST(GridMapTest, CSVWithNonNumericValueTest) {
   GridMap gridMap(3, "test_csv/badNonNumericCSV.csv");
 
   // Check that the grid has the correct dimensions.
-  ASSERT_EQ(gridMap.getYSize(), 1);
-  ASSERT_EQ(gridMap.getXSize(), 3);
+  ASSERT_EQ(gridMap.getRowCount(), 1);
+  ASSERT_EQ(gridMap.getColCount(), 3);
 
   // verify Cell values.
   EXPECT_TRUE(gridMap.getCell(0, 0).traversable);  // 1
@@ -74,8 +74,8 @@ TEST(GridMapTest, RowVectorPaddingTest) {
   GridMap gridMap(3, "test_csv/CSVNeedingPadding.csv");
 
   // Check that the grid has the correct dimensions.
-  ASSERT_EQ(gridMap.getYSize(), 1);
-  ASSERT_EQ(gridMap.getXSize(), 3);
+  ASSERT_EQ(gridMap.getRowCount(), 1);
+  ASSERT_EQ(gridMap.getColCount(), 3);
 
   // verify Cell values.
   EXPECT_TRUE(gridMap.getCell(0, 0).traversable);  // 1
@@ -92,8 +92,8 @@ TEST(GridMapTest, RowVectorTruncationTest) {
   GridMap gridMap(3, "test_csv/CSVNeedingTruncation.csv");
 
   // Check that the grid has the correct dimensions.
-  ASSERT_EQ(gridMap.getYSize(), 1);
-  ASSERT_EQ(gridMap.getXSize(), 3);
+  ASSERT_EQ(gridMap.getRowCount(), 1);
+  ASSERT_EQ(gridMap.getColCount(), 3);
 
   // verify Cell values.
   EXPECT_TRUE(gridMap.getCell(0, 0).traversable);  // 1

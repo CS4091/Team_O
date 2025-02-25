@@ -17,8 +17,8 @@ public:
   std::vector<std::string> findRoute();
 
 private:
-  GridMap map;
-  Aircraft aircraft;
+  GridMap m_map;
+  Aircraft m_aircraft;
 };
 
 #endif

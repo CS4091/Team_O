@@ -1,5 +1,5 @@
-%cpp -std=c++17 -Wall -Wextra
-%h -std=c++17 -Wall -Wextra 
+%cpp -std=c++11 -Wall -Wextra
+%h -std=c++11 -Wall -Wextra 
 
 -I./backend/src
 

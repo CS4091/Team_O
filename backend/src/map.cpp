@@ -91,7 +91,7 @@ void rowVectorValidation(std::vector<Cell> &rowVector, const int xSize,
 }
 } // namespace
 
-GridMap::GridMap(int width, std::string filePath) : xSize(width) {
+GridMap::GridMap(int width, std::string filePath) : m_colCount(width) {
   // Holds the input CSV
   std::ifstream inputFile;
 
@@ -139,25 +139,25 @@ GridMap::GridMap(int width, std::string filePath) : xSize(width) {
     }
 
     // Before adding the row, validate its length to enforce rectangularity
-    rowVectorValidation(rowVector, xSize, rowCount);
+    rowVectorValidation(rowVector, m_colCount, rowCount);
 
     // Once the line is scanned, add the associated rowVector to the main vector
-    GridMap::grid.push_back(rowVector);
+    GridMap::m_grid.push_back(rowVector);
     rowCount++;
   }
 
   // add the number of rows to the ySize private member
-  ySize = rowCount;
+  m_rowCount = rowCount;
 }
 
 void GridMap::printer() {
   // For each row...
-  for (int row = 0; row < ySize; row++) {
+  for (int row = 0; row < m_rowCount; row++) {
     std::cout << std::endl;
     // For each column...
-    for (int column = 0; column < xSize; column++) {
+    for (int column = 0; column < m_colCount; column++) {
       // Construct a Cell from the grid
-      const Cell outcell = grid[row][column];
+      const Cell outcell = m_grid[row][column];
       // Print whether the Cell is traversable (1 for yes, 0 for no)
       std::cout << outcell.traversable;
     }
@@ -166,26 +166,29 @@ void GridMap::printer() {
 
 bool GridMap::isTraversable(int row, int column) const {
   assert(row > -1 && column > -1 && "Attempted to access negative index");
-  assert(row < ySize && column < xSize && "Attempted out of bounds access");
+  assert(row < m_rowCount && column < m_colCount &&
+         "Attempted out of bounds access");
 
   // Return the Cell's traverability value
-  return grid[row][column].traversable;
+  return m_grid[row][column].traversable;
 }
 
 bool GridMap::isScanned(int row, int column) const {
   assert(row > -1 && column > -1 && "Attempted to access negative index");
-  assert(row < ySize && column < xSize && "Attempted out of bounds access");
+  assert(row < m_rowCount && column < m_colCount &&
+         "Attempted out of bounds access");
 
   // Return the Cell's scanned value
-  return grid[row][column].scanned;
+  return m_grid[row][column].scanned;
 }
 
 void GridMap::markScanned(int row, int column) {
   assert(row > -1 && column > -1 && "Attempted to access negative index");
-  assert(row < ySize && column < xSize && "Attempted out of bounds access");
+  assert(row < m_rowCount && column < m_colCount &&
+         "Attempted out of bounds access");
 
   // Determine if the Cell was already scanned
-  if (grid[row][column].scanned) {
+  if (m_grid[row][column].scanned) {
     // If so, print a note and leave it be
     std::cerr << "Note: Requested a Cell at [" << row << "][" << column
               << "] is already scanned\n";
@@ -193,13 +196,14 @@ void GridMap::markScanned(int row, int column) {
   }
 
   // Else, mark it as scanned
-  grid[row][column].scanned = true;
+  m_grid[row][column].scanned = true;
 }
 
 Cell GridMap::getCell(int row, int column) {
   assert(row > -1 && column > -1 && "Attempted to access negative index");
-  assert(row < ySize && column < xSize && "Attempted out of bounds access");
+  assert(row < m_rowCount && column < m_colCount &&
+         "Attempted out of bounds access");
 
   // Return the Cell
-  return grid[row][column];
+  return m_grid[row][column];
 }
