@@ -26,7 +26,8 @@ public:
    * data, but instead convert bad data to non-traversable Cells, or truncate
    * extra Cells in a row with too many columns.
    *
-   * @param width Represents the x-dimension (number of columns) of the grid.
+   * @param width Represents the 1-indexed x-dimension (number of columns) of
+   * the grid.
    * @param filePath The location of the CSV file the map is populated from.
    *
    * @return Nothing.

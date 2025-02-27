@@ -66,7 +66,7 @@ else
 fi
 
 echo -e "${NC}Running scan-build static analysis..."
-scan-build  g++ -std=c++14 -g3 -Wall -Wextra unit_tests/GridMapTester.cpp src/map.cpp -lgtest_main -lgtest -I../src > scan-build_report.txt # report should include "No bugs found" if passed
+scan-build  g++ -std=c++14 -g3 -Wall -Wextra unit_tests/*.cpp src/*.cpp -lgtest_main -lgtest -I../src > scan-build_report.txt # report should include "No bugs found" if passed
 if grep -Fq "No bugs found" scan-build_report.txt; then
     echo -e "${BGreen}scan-build static analysis passed."
     rm scan-build_report.txt
@@ -92,7 +92,7 @@ echo -e "${BIPurple}Done.\n"
 echo -e "${BIPurple}Running unit tests..."
 echo -e "${NC}"
 cd unit_tests
-g++ -std=c++14 GridMapTester.cpp ../src/*.cpp -lgtest_main -lgtest -Isrc/.
+g++ -std=c++14 *.cpp ../src/*.cpp -lgtest_main -lgtest -Isrc/.
 ./a.out 2> /dev/null
 rm a.out
 
@@ -101,7 +101,7 @@ echo -e "${BIPurple}Done.\n"
 echo -e "${BIPurple}Running dynamic analysis suite...\n"
 
 echo -e "${NC}Running valgrind dynamic analysis..."
-g++ -std=c++14 GridMapTester.cpp ../src/*.cpp -lgtest_main -lgtest -Isrc/.
+g++ -std=c++14 *.cpp ../src/*.cpp -lgtest_main -lgtest -Isrc/.
 valgrind -s --log-file=valgrind_report.txt --trace-children=yes --leak-check=full --show-leak-kinds=all --show-reachable=yes --track-origins=yes ./a.out > /dev/null 2>&1
 if grep -Fq "no leaks are possible" valgrind_report.txt  && grep -Fq "0 errors from 0 contexts" valgrind_report.txt; then
     echo -e "${BGreen}valgrind dynamic analysis passed."
@@ -114,7 +114,7 @@ else
 fi
 
 echo -e "${NC}Running address and leak sanitizer dynamic analysis..."
-g++ -std=c++14 -fsanitize=address -fsanitize=leak GridMapTester.cpp ../src/*.cpp -lgtest_main -lgtest -Isrc/.
+g++ -std=c++14 -fsanitize=address -fsanitize=leak *.cpp ../src/*.cpp -lgtest_main -lgtest -Isrc/.
 ./a.out > sanitizer_report.txt 2>&1
 if grep -Fq "ERROR" sanitizer_report.txt; then
     echo -e "${BIRed}Issues found by sanitizers."
