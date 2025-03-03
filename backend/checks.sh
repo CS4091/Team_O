@@ -36,7 +36,7 @@ echo -e "${BIPurple}Done.\n"
 echo -e "${BIPurple}Running static analysis suite...\n"
 
 echo -e "${NC}Running cppcheck static analysis..."
-cppcheck -v --platform=unix64 --language=c++ --std=c++11 --output-file=cppcheck_report.txt **/. > /dev/null # report should be blank if passed
+cppcheck -v --platform=unix64 --language=c++ --std=c++11 --check-level=exhaustive --output-file=cppcheck_report.txt **/. > /dev/null # report should be blank if passed
 if [ -s cppcheck_report.txt ]; then
     echo -e "${BIRed}Issues found by cppcheck."
     cat cppcheck_report.txt

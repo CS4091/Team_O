@@ -44,6 +44,11 @@ public:
    * @return Nothing.
    */
   void turnRight();
+  /*
+   * @brief Scans Cells in a 2x3 area in front of the aircraft.
+   *
+   * @return Nothing.
+   */
   void scan();
 
   // TODO: whatever other functions are needed
@@ -56,18 +61,25 @@ public:
   int getCurRow() const { return m_curRow; }
 
   /*
-   * @breif Getter for the aircraft's current column.
+   * @breif Getter for the aircraft's 0-indexed current column.
    *
    * @return The aircraft's current column.
    */
   int getCurCol() const { return m_curCol; }
 
   /*
-   * @brief Getter for the aircraft's current direction.
+   * @brief Getter for the aircraft's 0-indexed current direction.
    *
-   * @return the aircraft's current direction.
+   * @return The aircraft's current direction.
    */
   Direction getDir() const { return m_dir; }
+
+  /*
+   * @brief Getter for the aircraft's GridMap.
+   *
+   * @return The aircraft's GridMap.
+   */
+  GridMap getMap() const { return m_map; }
 
 private:
   int m_curRow = -1, m_curCol = -1; // 0-indexed row and column values

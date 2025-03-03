@@ -27,7 +27,6 @@ bool forwardPositionValid(Aircraft &aircraft, GridMap &map) {
     }
 
     return true;
-
     break;
 
   case Direction::dir_SOUTH:
@@ -40,7 +39,6 @@ bool forwardPositionValid(Aircraft &aircraft, GridMap &map) {
     }
 
     return true;
-
     break;
 
   case Direction::dir_EAST:
@@ -53,7 +51,6 @@ bool forwardPositionValid(Aircraft &aircraft, GridMap &map) {
     }
 
     return true;
-
     break;
 
   case Direction::dir_WEST:
@@ -65,7 +62,6 @@ bool forwardPositionValid(Aircraft &aircraft, GridMap &map) {
     }
 
     return true;
-
     break;
   }
 
@@ -93,7 +89,6 @@ bool forwardTraverabilityValid(Aircraft &aircraft, GridMap &map) {
 
     std::cerr << "Error: moving NORTH lands on untraversable Cell\n";
     return false;
-
     break;
 
   case Direction::dir_SOUTH:
@@ -104,7 +99,6 @@ bool forwardTraverabilityValid(Aircraft &aircraft, GridMap &map) {
 
     std::cerr << "Error: moving SOUTH lands on untraverable Cell\n";
     return false;
-
     break;
 
   case Direction::dir_EAST:
@@ -115,7 +109,6 @@ bool forwardTraverabilityValid(Aircraft &aircraft, GridMap &map) {
 
     std::cerr << "Error: moving EAST lands on untraversable Cell\n";
     return false;
-
     break;
 
   case Direction::dir_WEST:
@@ -126,13 +119,46 @@ bool forwardTraverabilityValid(Aircraft &aircraft, GridMap &map) {
 
     std::cerr << "Error: moving WEST lands on untraverable Cell\n";
     return false;
-
     break;
   }
 
   std::cerr << "Error: Something bad happened. Is the aircraft direction not a "
                "valid direction?\n";
   return false;
+}
+
+/*
+ *
+ * @brief Helper funtion for scan(). Scans Cells in a range of rows and columns
+ * determined by scan().
+ *
+ * @note As they are sacnned, the rows and columns count UPWARD.
+ *
+ * @param startRow The row from the aircraft's position to start scanning at.
+ * @param startCol The column from the aircraft's position to start scanning at.
+ * @param endRow The row from the aircraft's position to end scanning at.
+ * @param endCol The column from the aircraft's position to end scanning at.
+ * @param aircraft The aircraft whose scanner is being used.
+ * @param map The GridMap the aircraft exists on.
+ *
+ * @return Nothing.
+ */
+void scanCells(const int startRow, const int startCol, const int endRow,
+               const int endCol, const Aircraft aircraft, GridMap &map) {
+  // For every row in the scanning range...
+  for (int scanRow = aircraft.getCurRow() + startRow;
+       scanRow <= endRow + aircraft.getCurRow(); scanRow++) {
+    // For every column in the scanning range...
+    for (int scanCol = aircraft.getCurCol() + startCol;
+         scanCol <= endCol + aircraft.getCurCol(); scanCol++) {
+      // If the Cell loctation is on the map...
+      if (scanRow >= 0 && scanCol >= 0 && scanRow < map.getRowCount() &&
+          scanCol < map.getColCount()) {
+        // Mark it as scanned
+        map.markScanned(scanRow, scanCol);
+      }
+    }
+  }
 }
 } // namespace
 
@@ -249,6 +275,47 @@ void Aircraft::turnRight() {
 
   case Direction::dir_WEST:
     m_dir = Direction::dir_NORTH;
+    return;
+    break;
+  }
+}
+
+void Aircraft::scan() {
+  // Determine the direction of the aircraft
+  switch (m_dir) {
+
+  // For each direction, if the cell exists, scan an area two rows ahead and
+  // three rows wide
+  case Direction::dir_NORTH:
+    // For NORTH, scan Cells in rows -1, -2; columns -1, 0, 1 from the
+    // aircraft
+    assert(m_curRow - 1 < m_map.getRowCount() - 1);
+    scanCells(-2, -1, -1, 1, *this, m_map);
+
+    return;
+    break;
+
+  case Direction::dir_SOUTH:
+    // For SOUTH, scan Cells in rows 1, 2; columns -1, 0, 1 from the aircraft
+    assert(m_curRow + 1 > 0);
+    scanCells(1, -1, 2, 1, *this, m_map);
+
+    return;
+    break;
+
+  case Direction::dir_EAST:
+    // For EAST, scan Cells in rows -1, 0, 1; columns 1, 2 from the aircraft
+    assert(m_curCol + 1 > 0);
+    scanCells(-1, 1, 1, 2, *this, m_map);
+    return;
+    break;
+
+  case Direction::dir_WEST:
+    // For WEST, scan Cells in rows -1, 0, 1; columns -1, -2 from the
+    // aircraft
+    assert(m_curCol - 1 < m_map.getColCount() - 1);
+    scanCells(-1, -2, 1, -1, *this, m_map);
+
     return;
     break;
   }
