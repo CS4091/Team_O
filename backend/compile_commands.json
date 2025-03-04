@@ -5,7 +5,19 @@
       "-c",
       "-Wall",
       "-Wextra",
-      "-std=c++14",
+      "--std=c++14",
+      "src/aircraft.cpp"
+    ],
+    "directory": "/home/ethan/Code/Team_O/backend",
+    "file": "/home/ethan/Code/Team_O/backend/src/aircraft.cpp"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-Wall",
+      "-Wextra",
+      "--std=c++14",
       "src/map.cpp"
     ],
     "directory": "/home/ethan/Code/Team_O/backend",
@@ -17,7 +29,19 @@
       "-c",
       "-Wall",
       "-Wextra",
-      "-std=c++14",
+      "--std=c++14",
+      "unit_tests/AircraftTester.cpp"
+    ],
+    "directory": "/home/ethan/Code/Team_O/backend",
+    "file": "/home/ethan/Code/Team_O/backend/unit_tests/AircraftTester.cpp"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-Wall",
+      "-Wextra",
+      "--std=c++14",
       "unit_tests/GridMapTester.cpp"
     ],
     "directory": "/home/ethan/Code/Team_O/backend",
