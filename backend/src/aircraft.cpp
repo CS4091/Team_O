@@ -27,7 +27,6 @@ bool forwardPositionValid(Aircraft &aircraft, GridMap &map) {
     }
 
     return true;
-    break;
 
   case Direction::dir_SOUTH:
     // The row position must be < GridMap's m_rowCount - 1
@@ -39,7 +38,6 @@ bool forwardPositionValid(Aircraft &aircraft, GridMap &map) {
     }
 
     return true;
-    break;
 
   case Direction::dir_EAST:
     // The column position must be < GridMap's m_colCount - 1
@@ -51,7 +49,6 @@ bool forwardPositionValid(Aircraft &aircraft, GridMap &map) {
     }
 
     return true;
-    break;
 
   case Direction::dir_WEST:
     // The column position must be > 0
@@ -62,7 +59,6 @@ bool forwardPositionValid(Aircraft &aircraft, GridMap &map) {
     }
 
     return true;
-    break;
   }
 
   std::cerr << "Error: Something bad happened. Is the aircraft direction not a "
@@ -89,7 +85,6 @@ bool forwardTraverabilityValid(Aircraft &aircraft, GridMap &map) {
 
     std::cerr << "Error: moving NORTH lands on untraversable Cell\n";
     return false;
-    break;
 
   case Direction::dir_SOUTH:
     // The Cell one row below the aircraft must be traversable
@@ -99,7 +94,6 @@ bool forwardTraverabilityValid(Aircraft &aircraft, GridMap &map) {
 
     std::cerr << "Error: moving SOUTH lands on untraverable Cell\n";
     return false;
-    break;
 
   case Direction::dir_EAST:
     // The Cell one column right of the aircraft must be traversable
@@ -109,7 +103,6 @@ bool forwardTraverabilityValid(Aircraft &aircraft, GridMap &map) {
 
     std::cerr << "Error: moving EAST lands on untraversable Cell\n";
     return false;
-    break;
 
   case Direction::dir_WEST:
     // The Cell one column left of the aircraft must be traversable
@@ -119,7 +112,6 @@ bool forwardTraverabilityValid(Aircraft &aircraft, GridMap &map) {
 
     std::cerr << "Error: moving WEST lands on untraverable Cell\n";
     return false;
-    break;
   }
 
   std::cerr << "Error: Something bad happened. Is the aircraft direction not a "
@@ -231,22 +223,18 @@ void Aircraft::turnLeft() {
   case Direction::dir_NORTH:
     m_dir = Direction::dir_WEST;
     return;
-    break;
 
   case Direction::dir_SOUTH:
     m_dir = Direction::dir_EAST;
     return;
-    break;
 
   case Direction::dir_EAST:
     m_dir = Direction::dir_NORTH;
     return;
-    break;
 
   case Direction::dir_WEST:
     m_dir = Direction::dir_SOUTH;
     return;
-    break;
   }
 }
 
@@ -261,22 +249,18 @@ void Aircraft::turnRight() {
   case Direction::dir_NORTH:
     m_dir = Direction::dir_EAST;
     return;
-    break;
 
   case Direction::dir_SOUTH:
     m_dir = Direction::dir_WEST;
     return;
-    break;
 
   case Direction::dir_EAST:
     m_dir = Direction::dir_SOUTH;
     return;
-    break;
 
   case Direction::dir_WEST:
     m_dir = Direction::dir_NORTH;
     return;
-    break;
   }
 }
 
@@ -293,7 +277,6 @@ void Aircraft::scan() {
     scanCells(-2, -1, -1, 1, *this, m_map);
 
     return;
-    break;
 
   case Direction::dir_SOUTH:
     // For SOUTH, scan Cells in rows 1, 2; columns -1, 0, 1 from the aircraft
@@ -301,14 +284,12 @@ void Aircraft::scan() {
     scanCells(1, -1, 2, 1, *this, m_map);
 
     return;
-    break;
 
   case Direction::dir_EAST:
     // For EAST, scan Cells in rows -1, 0, 1; columns 1, 2 from the aircraft
     assert(m_curCol + 1 > 0);
     scanCells(-1, 1, 1, 2, *this, m_map);
     return;
-    break;
 
   case Direction::dir_WEST:
     // For WEST, scan Cells in rows -1, 0, 1; columns -1, -2 from the
@@ -317,6 +298,5 @@ void Aircraft::scan() {
     scanCells(-1, -2, 1, -1, *this, m_map);
 
     return;
-    break;
   }
 }
