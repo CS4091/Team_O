@@ -16,5 +16,5 @@ jobs:
       - name: Build and run unit tests 
         working-directory: backend/unit_tests
         run: |
-          g++ -std=c++14 *.cpp ../src/aircraft.cpp ../src/map.cpp -lgtest_main -lgtest -Isrc/.
+          g++ -std=c++14 *.cpp ../src/map.cpp -lgtest_main -lgtest -Isrc/.
           ./a.out
