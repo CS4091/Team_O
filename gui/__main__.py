@@ -31,9 +31,9 @@ class View(ttk.Frame):
         map_frame.columnconfigure(1, weight=3)
         map_frame.rowconfigure(1, weight=3)
         
-        # map_frame['borderwidth'] = 5
-        # map_frame['relief'] = 'groove'
-        # map_frame['padding'] = (5, 10)
+        map_frame['borderwidth'] = 5
+        map_frame['relief'] = 'groove'
+        map_frame['padding'] = (5, 10)
 
         # buttons for map frame
         map_frame_button1 = ttk.Button(map_frame, text='Previous Route')
@@ -48,7 +48,7 @@ class View(ttk.Frame):
         map_frame_map = ttk.Label(map_frame, text='Map Here')
         map_frame_map.grid(column=1, row=1, padx=10, pady=10, sticky=tk.E+tk.W)
 
-        map_frame.grid(column=5, row=5, padx=10, pady=10)
+        map_frame.grid(column=5, row=5, padx=10, pady=10, sticky=tk.E+tk.W)
 
         
         # labels
