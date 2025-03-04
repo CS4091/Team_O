@@ -1,13 +1,14 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog as fd
+from tkinter.messagebox import showerror, showwarning, showinfo
 
 
 class Model:
     def __init__(self, map):
         self.map = map
 
-    def save(self):
+    def save_map(self):
         """
         Save the map to a file
         :return:
@@ -25,32 +26,45 @@ class View(ttk.Frame):
         map_frame = ttk.Frame(self)
 
         # grid layout for the map frame
-        map_frame.columnconfigure(5, weight=1)
-        map_frame.columnconfigure(5, weight=3)
-
-        ttk.Label(map_frame, text='place map').grid(column=5, row=0, sticky=tk.SE)
+        map_frame.columnconfigure(0, weight=1)
+        map_frame.columnconfigure(1, weight=1)
+        map_frame.columnconfigure(1, weight=3)
+        map_frame.rowconfigure(1, weight=3)
         
         # map_frame['borderwidth'] = 5
         # map_frame['relief'] = 'groove'
         # map_frame['padding'] = (5, 10)
 
-        # label
-        self.label_map = ttk.Label(self, text="Map", background="green")
-        self.label_map.grid(column=12, row=4, columnspan=4, sticky=tk.NE, padx=5, pady=5)
+        # buttons for map frame
+        map_frame_button1 = ttk.Button(map_frame, text='Previous Route')
+        map_frame_button1.grid(column=0, row=0, padx=10, sticky=tk.W+tk.E)
+
+        map_frame_button2 = ttk.Button(map_frame, text='Save Route')
+        map_frame_button2.grid(column=1, row=0, padx=10, sticky=tk.E+tk.W)
+
+        map_frame_button3 = ttk.Button(map_frame, text='Next Route')
+        map_frame_button3.grid(column=2, row=0, padx=10, sticky=tk.E+tk.W)
+
+        map_frame_map = ttk.Label(map_frame, text='Map Here')
+        map_frame_map.grid(column=1, row=1, padx=10, pady=10, sticky=tk.E+tk.W)
+
+        map_frame.grid(column=5, row=5, padx=10, pady=10)
+
+        
+        # labels
+        # self.label_temp = ttk.Label(self, text="temp")
+        # self.label_temp.grid(column=0, row=0, padx=10)
+
+        # TODO: Show csv file
 
         # separator
         # self.separator = ttk.Separator(self, orient="vertical")
         # self.separator.pack(fill='y')
 
-        # save button
-        self.save_button = ttk.Button(
-            self, text="Save", command=self.save_button_clicked
-        )
-        self.save_button.grid(row=1, column=3, padx=10)
-
-        # message
-        self.message_label = ttk.Label(self, text="", foreground="red")
-        self.message_label.grid(row=2, column=1, sticky=tk.W)
+        # buttons
+        # open file button
+        self.open_file_button = ttk.Button(self, text='Open a File', command=self.file_open_button_clicked)
+        self.open_file_button.grid(column=10, row=10, padx=10, pady=10)
 
         # set the controller
         self.controller = None
@@ -69,7 +83,7 @@ class View(ttk.Frame):
         :return:
         """
         if self.controller:
-            self.controller.save()
+            self.controller.save_map()
 
     def show_success(self, message):
         """
@@ -81,9 +95,6 @@ class View(ttk.Frame):
         self.message_label["foreground"] = "green"
         self.message_label.after(3000, self.hide_message)
 
-        # reset the form
-        self.email_entry["foreground"] = "black"
-        self.email_var.set("")
 
     def show_error(self, message):
         """
@@ -94,7 +105,6 @@ class View(ttk.Frame):
         self.message_label["text"] = message
         self.message_label["foreground"] = "red"
         self.message_label.after(3000, self.hide_message)
-        self.email_entry["foreground"] = "red"
 
     def hide_message(self):
         """
@@ -103,29 +113,70 @@ class View(ttk.Frame):
         """
         self.message_label["text"] = ""
 
+    def file_open_button_clicked(self):
+        """
+        Handle open file button click event
+        :return:
+        """
+        # open file button
+        if self.controller:
+            self.controller.select_files()
+
 
 class Controller:
     def __init__(self, model, view):
         self.model = model
         self.view = view
 
-    def save(self, email):
+    def save(self, map):
         """
-        Save the email
-        :param email:
+        Save the map
+        :param map:
         :return:
         """
         try:
 
             # save the model
-            self.model.email = email
+            self.model.map = map
             self.model.save()
 
             # show a success message
-            self.view.show_success(f"The email {email} saved!")
+            self.view.show_success(f"The map {map} saved!")
 
         except ValueError as error:
             # show an error message
+            self.view.show_error(error)
+
+    def select_files(self):
+        """
+        Select multiple files
+        :param files:
+        :return:
+        """
+        try:
+            # accepted file types
+            filetypes = (
+                ('Text files', '*.txt'),
+                ('CSV files', '*.csv'),
+                ('All files', '*.*')
+            )
+
+            # gather the files
+            filenames = fd.askopenfilenames(
+                title='Open files',
+                initialdir='/',
+                filetypes=filetypes
+            )
+
+            # only show info if there is a file selected
+            if filenames != '':
+                showinfo(
+                    title='Selected Files',
+                    message=filenames
+                )
+
+            
+        except ValueError as error:
             self.view.show_error(error)
 
 
@@ -137,7 +188,10 @@ class App(tk.Tk):
         self.title("Air-to-Ground Search Demo")
 
         # change the icon
-        # root.iconbitmap('./assets/pythontutorial.ico')
+        # self.iconbitmap('./assets/pythontutorial.ico')
+
+        # set resolution
+        
 
         # set window sizes
         window_width = 1000
@@ -146,6 +200,10 @@ class App(tk.Tk):
         # get the screen dimension
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
+
+        # configure grid to place widgets
+        self.columnconfigure(index=10, weight=0)
+        self.rowconfigure(index=10, weight=0)
 
         # find the center point
         center_x = int(screen_width / 2 - window_width / 2)
@@ -170,7 +228,7 @@ class App(tk.Tk):
 
         # create the view and place it on the root window
         view = View(self)
-        view.grid(row=0, column=0, padx=10, pady=10)
+        view.grid(row=0, column=0)
 
         # create the controller
         controller = Controller(model, view)
