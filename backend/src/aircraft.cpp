@@ -136,7 +136,7 @@ bool forwardTraverabilityValid(Aircraft &aircraft, GridMap &map) {
  * @return Number of new Cells scanned.
  */
 int scanCells(const int startRow, const int startCol, const int endRow,
-               const int endCol, const Aircraft aircraft, GridMap &map) {
+              const int endCol, const Aircraft aircraft, GridMap &map) {
   int newScanCount = 0;
   // For every row in the scanning range...
   for (int scanRow = aircraft.getCurRow() + startRow;
@@ -149,7 +149,7 @@ int scanCells(const int startRow, const int startCol, const int endRow,
           scanCol < map.getColCount() && !map.isScanned(scanRow, scanCol)) {
         // Mark it as scanned
         map.markScanned(scanRow, scanCol);
-	newScanCount++;
+        newScanCount++;
       }
     }
   }
@@ -269,7 +269,7 @@ void Aircraft::turnRight() {
 
 int Aircraft::scan() {
   int newScanCount = 0;
-  
+
   // Determine the direction of the aircraft
   switch (m_dir) {
 
