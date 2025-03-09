@@ -47,9 +47,9 @@ public:
   /*
    * @brief Scans Cells in a 2x3 area in front of the aircraft.
    *
-   * @return Nothing.
+   * @return The number of Cells scanned. 
    */
-  void scan();
+  int scan();
 
   // TODO: whatever other functions are needed
 

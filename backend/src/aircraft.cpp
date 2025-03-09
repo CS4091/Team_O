@@ -133,10 +133,11 @@ bool forwardTraverabilityValid(Aircraft &aircraft, GridMap &map) {
  * @param aircraft The aircraft whose scanner is being used.
  * @param map The GridMap the aircraft exists on.
  *
- * @return Nothing.
+ * @return Number of new Cells scanned.
  */
-void scanCells(const int startRow, const int startCol, const int endRow,
+int scanCells(const int startRow, const int startCol, const int endRow,
                const int endCol, const Aircraft aircraft, GridMap &map) {
+  int newScanCount = 0;
   // For every row in the scanning range...
   for (int scanRow = aircraft.getCurRow() + startRow;
        scanRow <= endRow + aircraft.getCurRow(); scanRow++) {
@@ -145,12 +146,14 @@ void scanCells(const int startRow, const int startCol, const int endRow,
          scanCol <= endCol + aircraft.getCurCol(); scanCol++) {
       // If the Cell loctation is on the map...
       if (scanRow >= 0 && scanCol >= 0 && scanRow < map.getRowCount() &&
-          scanCol < map.getColCount()) {
+          scanCol < map.getColCount() && !map.isScanned(scanRow, scanCol)) {
         // Mark it as scanned
         map.markScanned(scanRow, scanCol);
+	newScanCount++;
       }
     }
   }
+  return newScanCount;
 }
 } // namespace
 
@@ -264,7 +267,9 @@ void Aircraft::turnRight() {
   }
 }
 
-void Aircraft::scan() {
+int Aircraft::scan() {
+  int newScanCount = 0;
+  
   // Determine the direction of the aircraft
   switch (m_dir) {
 
@@ -274,29 +279,32 @@ void Aircraft::scan() {
     // For NORTH, scan Cells in rows -1, -2; columns -1, 0, 1 from the
     // aircraft
     assert(m_curRow - 1 < m_map.getRowCount() - 1);
-    scanCells(-2, -1, -1, 1, *this, m_map);
+    newScanCount = scanCells(-2, -1, -1, 1, *this, m_map);
 
-    return;
+    return newScanCount;
 
   case Direction::dir_SOUTH:
     // For SOUTH, scan Cells in rows 1, 2; columns -1, 0, 1 from the aircraft
     assert(m_curRow + 1 > 0);
-    scanCells(1, -1, 2, 1, *this, m_map);
+    newScanCount = scanCells(1, -1, 2, 1, *this, m_map);
 
-    return;
+    return newScanCount;
 
   case Direction::dir_EAST:
     // For EAST, scan Cells in rows -1, 0, 1; columns 1, 2 from the aircraft
     assert(m_curCol + 1 > 0);
-    scanCells(-1, 1, 1, 2, *this, m_map);
-    return;
+    newScanCount = scanCells(-1, 1, 1, 2, *this, m_map);
+
+    return newScanCount;
 
   case Direction::dir_WEST:
     // For WEST, scan Cells in rows -1, 0, 1; columns -1, -2 from the
     // aircraft
     assert(m_curCol - 1 < m_map.getColCount() - 1);
-    scanCells(-1, -2, 1, -1, *this, m_map);
+    newScanCount = scanCells(-1, -2, 1, -1, *this, m_map);
 
-    return;
+    return newScanCount;
   }
+
+  throw std::exception(); // This should never happen
 }

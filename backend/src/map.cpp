@@ -94,7 +94,6 @@ void rowVectorValidation(std::vector<Cell> &rowVector, const int xSize,
 GridMap::GridMap(int width, std::string filePath) : m_colCount(width) {
   // Holds the input CSV
   std::ifstream inputFile;
-
   // TODO: Figure out how to properly handle this when python is calling the
   // constructor
   inputFile.open(filePath); // flawfinder: ignore
