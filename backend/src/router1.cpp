@@ -11,11 +11,12 @@
 #include <utility>
 #include <vector>
 
-#define PERCENT80 0.8
-
-int totalMoves = 0;
+// #define PERCENT80 0.8
+constexpr float PERCENT80 = 0.8;
 
 namespace {
+using std::pair;
+
 /*
  * @brief Helper function for RoutePlanner's findRoute(), verifying position for
  * forward moves.
@@ -115,7 +116,7 @@ int manhattanDistance(const int &curXCoord, const int &curYCoord,
 
 // State struct representing a cell position and orientation
 struct State {
-  std::pair<int, int> position; // (row, col)
+  pair<int, int> position; // (row, col)
   Direction direction;
 
   // Define operator< so that State can be stored in a set
@@ -133,15 +134,15 @@ struct State {
 // A* node that stores a state and the sequence of moves that led to it
 struct AStarNode {
   State state;
-  std::vector<Moves> moves;
-  int cost = 0;
-  int f = 0;
+  std::vector<Moves> moves; // sequence of moves to reach this state
+  int cost = 0;             // g: cost so far (number of moves)
+  int f = 0; // f = g + h, where h is the heuristic (manhattan distance)
 };
 
-// Operator overload to allow A* search to work
+// Custom comparator for std::priority_queue (min-heap based on f)
 struct AStarNodeComparator {
   bool operator()(const AStarNode &a, const AStarNode &b) const {
-    return a.f > b.f;
+    return a.f > b.f; // lower f has higher priority
   }
 };
 
@@ -287,7 +288,8 @@ bool forwardAfterTurnScansNew(Aircraft aircraft, const Moves &turn,
 }
 
 /*
- * @brief Simulates if moving in a direction based on action is valid.
+ * @brief Simulates if moving in a direction based on action is valid and fills
+ * newState with the resulting state.
  *
  * @param curState The current state (row, column, direction) of the aircraft.
  * @param move The move (left turn, right turn, forward) for the aircraft to
@@ -300,10 +302,10 @@ bool forwardAfterTurnScansNew(Aircraft aircraft, const Moves &turn,
  */
 bool simulateAction(const State &curState, const Moves &move,
                     const GridMap &map, State &newState) {
-  newState = curState;
+  newState = curState; // initialize with current state
   if (move == Moves::move_TURNLEFT) {
     newState.direction = directionAfterTurnLeft(curState.direction);
-    return true;
+    return true; // turning in place is always valid
   } else if (move == Moves::move_TURNRIGHT) {
     newState.direction = directionAfterTurnRight(curState.direction);
     return true;
@@ -316,7 +318,7 @@ bool simulateAction(const State &curState, const Moves &move,
       return false;
     }
     newState.position = newPos;
-    // unchanged distance
+    // unchanged direction
     return true;
   }
   return false; // unknown move, shouldn't happen
@@ -327,6 +329,8 @@ bool simulateAction(const State &curState, const Moves &move,
  * reroute itself to a valid Cell in multiple moves. This function computes the
  * path the aircraft must take to the nearest valid move use A* search with
  * manhatan distance as the hueristic.
+ *
+ * @read https://en.wikipedia.org/wiki/A*_search_algorithm
  *
  * @param curPos The pair of <row, column> the Aircraft currently occupies.
  * @param curDir The current direction of the Aircaft.
@@ -358,17 +362,17 @@ std::vector<Moves> computePath(const std::pair<int, int> &curPos,
     const AStarNode node = openSet.top();
     openSet.pop();
 
-    // If target position reached (direction does not matter), return moves.
+    // If target position reached (direction does not matter), return moves
     if (node.state.position == targetPos) {
       return node.moves;
     }
 
-    // Skip states that have been processed.
+    // Skip states that have been processed
     if (closedSet.find(node.state) != closedSet.end())
       continue;
     closedSet.insert(node.state);
 
-    // Try each possible action.
+    // Try each possible action
     const std::vector<Moves> actions = {
         Moves::move_FORWARD, Moves::move_TURNLEFT, Moves::move_TURNRIGHT};
     for (const Moves &action : actions) {
@@ -379,10 +383,8 @@ std::vector<Moves> computePath(const std::pair<int, int> &curPos,
         AStarNode nextNode;
         nextNode.state = nextState;
         nextNode.moves = node.moves;
-        std::cout << action << std::endl;
-        totalMoves++;
         nextNode.moves.push_back(action);
-        nextNode.cost = node.cost + 1; // Assume each move has a cost of 1.
+        nextNode.cost = node.cost + 1; // Assume each move has a cost of 1
         nextNode.f = nextNode.cost +
                      manhattanDistance(nextState.position.first,
                                        nextState.position.second,
@@ -391,17 +393,16 @@ std::vector<Moves> computePath(const std::pair<int, int> &curPos,
       }
     }
   }
-  return {}; // Return empty vector if no valid path is found.
+  return {}; // Return empty vector if no valid path is found
 }
 
 } // namespace
 
 std::vector<Moves> RoutePlanner::findRoute() {
-  const int targetScanCount = std::ceil(
-      PERCENT80 *
-      m_aircraft.getMap()
-          .getTraversableCount()); // TODO: Decide if the 80% should include
-                                   // all Cells or only traversable Cells
+  const int targetScanCount =
+      std::ceil(PERCENT80 *
+                static_cast<float>(m_aircraft.getMap().getTraversableCount()));
+
   int scannedCount = 0;
 
   std::cout << "Aircraft start at [" << m_aircraft.getCurRow() << "]["
@@ -419,8 +420,9 @@ std::vector<Moves> RoutePlanner::findRoute() {
     // If moving forward is possible and beneficial
     if (forwardPositionValid(m_aircraft, m_aircraft.getMap()) &&
         willScanNewCells(m_aircraft)) {
+      // Then move forward and scan
       m_aircraft.moveForward();
-      totalMoves++;
+      m_totalMoves++;
       std::cout << "MOVE FORWARD to [" << m_aircraft.getCurRow() << "]["
                 << m_aircraft.getCurCol() << "]\n";
       m_moveList.push_back(Moves::move_FORWARD);
@@ -435,17 +437,19 @@ std::vector<Moves> RoutePlanner::findRoute() {
                            m_aircraft.getMap()) &&
                forwardAfterTurnScansNew(m_aircraft, Moves::move_TURNLEFT,
                                         m_aircraft.getMap())) {
+      // If moving left is beneficial, turn left and scan
       m_aircraft.turnLeft();
-      totalMoves++;
+      m_totalMoves++;
       std::cout << "TURN LEFT\n";
       m_moveList.push_back(Moves::move_TURNLEFT);
       scannedCount += m_aircraft.scan();
       std::cout << "New scan count: " << scannedCount << ".Target is "
                 << targetScanCount
                 << ". Remaining: " << targetScanCount - scannedCount << ".\n";
+      // verify again that forward move is possible, then do it and scan
       if (forwardPositionValid(m_aircraft, m_aircraft.getMap())) {
         m_aircraft.moveForward();
-        totalMoves++;
+        m_totalMoves++;
         std::cout << "MOVE FORWARD TO [" << m_aircraft.getCurRow() << "]["
                   << m_aircraft.getCurCol() << "]\n";
         m_moveList.push_back(Moves::move_FORWARD);
@@ -454,21 +458,24 @@ std::vector<Moves> RoutePlanner::findRoute() {
                   << targetScanCount
                   << ". Remaining: " << targetScanCount - scannedCount << ".\n";
       }
+      // If left move doesn't work, try right move
     } else if (isTurnValid(m_aircraft, Moves::move_TURNRIGHT,
                            m_aircraft.getMap()) &&
                forwardAfterTurnScansNew(m_aircraft, Moves::move_TURNRIGHT,
                                         m_aircraft.getMap())) {
+      // If moving right is beneficial, turn right and scan
       m_aircraft.turnRight();
-      totalMoves++;
+      m_totalMoves++;
       std::cout << "TURN RIGHT\n";
       m_moveList.push_back(Moves::move_TURNRIGHT);
       scannedCount += m_aircraft.scan();
       std::cout << "New scan count: " << scannedCount << ".Target is "
                 << targetScanCount
                 << ". Remaining: " << targetScanCount - scannedCount << ".\n";
+      // verify again that forward move is possible, then do it and scan
       if (forwardPositionValid(m_aircraft, m_aircraft.getMap())) {
         m_aircraft.moveForward();
-        totalMoves++;
+        m_totalMoves++;
         std::cout << "MOVE FORWARD TO [" << m_aircraft.getCurRow() << "]["
                   << m_aircraft.getCurCol() << "]\n";
         m_moveList.push_back(Moves::move_FORWARD);
@@ -483,12 +490,15 @@ std::vector<Moves> RoutePlanner::findRoute() {
       // Cells, the Aircraft is either at a dead-end or surrounded by
       // already scanned/blocked cells. In this case, reposition to the
       // nearest area with unscanned traversable cells.
+
+      // Find the nearest unscanned coordinates using manhattan distance
       const int targetRow = findNearestUnscannedPosRow();
       const int targetCol = findNearestUnscannedPosCol();
 
       std::cout << "Found new target position at [" << targetRow << "]["
                 << targetCol << "]. Must reposition...\n";
 
+      // Using pairs here makes functions less verbose
       std::pair<int, int> curPos;
       curPos.first = m_aircraft.getCurRow();
       curPos.second = m_aircraft.getCurCol();
@@ -497,15 +507,17 @@ std::vector<Moves> RoutePlanner::findRoute() {
       targetPos.first = targetRow;
       targetPos.second = targetCol;
 
+      // Find the path from the current position to the new one
       const std::vector<Moves> path = computePath(
           curPos, m_aircraft.getDir(), targetPos, m_aircraft.getMap());
       if (path.empty()) {
       }
 
+      // Carry out every move required to get to the new position
       for (const auto &move : path) {
         if (move == Moves::move_FORWARD) {
           m_aircraft.moveForward();
-          totalMoves++;
+          m_totalMoves++;
           std::cout << "MOVE FORWARD TO [" << m_aircraft.getCurRow() << "]["
                     << m_aircraft.getCurCol() << "]\n";
           m_moveList.push_back(Moves::move_FORWARD);
@@ -516,7 +528,7 @@ std::vector<Moves> RoutePlanner::findRoute() {
                     << ".\n";
         } else if (move == Moves::move_TURNLEFT) {
           m_aircraft.turnLeft();
-          totalMoves++;
+          m_totalMoves++;
           std::cout << "TURN LEFT\n";
           m_moveList.push_back(Moves::move_TURNLEFT);
           scannedCount += m_aircraft.scan();
@@ -526,7 +538,7 @@ std::vector<Moves> RoutePlanner::findRoute() {
                     << ".\n";
         } else if (move == Moves::move_TURNRIGHT) {
           m_aircraft.turnRight();
-          totalMoves++;
+          m_totalMoves++;
           std::cout << "TURN RIGHT\n";
           m_moveList.push_back(Moves::move_TURNRIGHT);
           scannedCount += m_aircraft.scan();
@@ -538,7 +550,7 @@ std::vector<Moves> RoutePlanner::findRoute() {
       }
     }
   }
-  std::cout << "TOTAL MOVES: " << totalMoves << std::endl;
+  std::cout << "TOTAL MOVES: " << m_totalMoves << std::endl;
   return moves;
 }
 

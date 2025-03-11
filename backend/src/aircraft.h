@@ -12,6 +12,7 @@ enum class Direction {
   dir_WEST = 3
 };
 
+// Used for debugging
 inline std::ostream &operator<<(std::ostream &os, const Direction dir) {
   switch (dir) {
   case Direction::dir_NORTH:

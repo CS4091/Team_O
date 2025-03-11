@@ -6,21 +6,6 @@
 
 enum class Moves { move_FORWARD, move_TURNLEFT, move_TURNRIGHT };
 
-inline std::ostream &operator<<(std::ostream &os, const Moves move) {
-  switch (move) {
-  case Moves::move_FORWARD:
-    os << "MOVE FORWARD (REROUTE)";
-    break;
-  case Moves::move_TURNLEFT:
-    os << "TURN LEFT (REROUTE)";
-    break;
-  case Moves::move_TURNRIGHT:
-    os << "TURN RIGHT (REROUTE)";
-    break;
-  }
-  return os;
-}
-
 /*
  * @brief Represents the set of functions completing the route planning
  * algorithm.
@@ -34,15 +19,18 @@ public:
    * @param aircraft The Aircraft the RoutePlanner will be routing.
    */
   RoutePlanner(Aircraft aircraft) : m_aircraft(aircraft) {}
-
   /*
    * @brief A router for the Aircraft, based on a modified version of lawn
-   * mowing algorithms combined with A* search.
+   * mowing algorithms combined with A* search. Finds a route that scans 80% of
+   * traversable Cells.
    *
-   * @return Nothin.
+   * @read https://arxiv.org/pdf/2307.01092
+   * @read
+   * https://thescipub.com/pdf/jcssp.2012.2032.2041.pdf#:~:text=algorithms,Acar%20and%20Choset%2C%202001
+   *
+   * @return Nothing.
    */
   std::vector<Moves> findRoute();
-
   /*
    * @brief Finds the nearest unscanned row based on manhattan distance.
    *
@@ -57,8 +45,9 @@ public:
   int findNearestUnscannedPosCol();
 
 private:
-  Aircraft m_aircraft;
+  Aircraft m_aircraft; // The aircraft being routed
   std::vector<Moves> m_moveList;
+  int m_totalMoves = 0;
 };
 
 #endif
