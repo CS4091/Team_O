@@ -3,7 +3,8 @@ bugprone-*,
 -bugprone-easily-swappable-parameters,
 clang-analyzer-*,
 cppcoreguidelines-*,
+-cppcoreguidelines-pro-type-member-init,
 misc-*,
-readability-*
+-misc-non-private-member-variables-in-classes,
 '
 FormatStyle: LLVM 

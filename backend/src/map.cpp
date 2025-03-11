@@ -148,6 +148,16 @@ GridMap::GridMap(int width, std::string filePath) : m_colCount(width) {
 
   // add the number of rows to the ySize private member
   m_rowCount = rowCount;
+
+  // For each row...
+  for (int row = 0; row < m_rowCount; row++) {
+    // For each column...
+    for (int column = 0; column < m_colCount; column++) {
+      if (isTraversable(row, column)) {
+        m_totalTraversable++;
+      }
+    }
+  }
 }
 
 void GridMap::printer() {
@@ -164,19 +174,44 @@ void GridMap::printer() {
   }
 }
 
+void GridMap::mapStats() {
+  int totalCellCount = 0;
+  int totalTraversableCount = 0;
+  int totalUntraversableCount = 0;
+
+  // For each row...
+  for (int row = 0; row < m_rowCount; row++) {
+    // For each column...
+    for (int column = 0; column < m_colCount; column++) {
+      // Construct a Cell from the grid
+      totalCellCount++;
+      if (isTraversable(row, column)) {
+        totalTraversableCount++;
+      } else {
+        totalUntraversableCount++;
+      }
+    }
+  }
+  std::cout << "Total cell count: " << totalCellCount << std::endl;
+  std::cout << "Total traversable count: " << totalTraversableCount
+            << std::endl;
+  std::cout << "Total untraversable count: " << totalUntraversableCount
+            << std::endl;
+}
+
 bool GridMap::isTraversable(int row, int column) const {
   assert(row > -1 && column > -1 && "Attempted to access negative index");
-  assert(row < m_rowCount && column < m_colCount &&
-         "Attempted out of bounds access");
 
+  if (row > m_rowCount || column > m_colCount) {
+    std::cerr << "Out of bounds move is not valid\n";
+  }
   // Return the Cell's traverability value
   return m_grid[row][column].traversable;
 }
 
 bool GridMap::isScanned(int row, int column) const {
   assert(row > -1 && column > -1 && "Attempted to access negative index");
-  assert(row < m_rowCount && column < m_colCount &&
-         "Attempted out of bounds access");
+  assert(row < m_rowCount && column < m_colCount);
 
   // Return the Cell's scanned value
   return m_grid[row][column].scanned;
@@ -197,6 +232,10 @@ void GridMap::markScanned(int row, int column) {
 
   // Else, mark it as scanned
   m_grid[row][column].scanned = true;
+}
+
+bool GridMap::isWithinBounds(int row, int col) const {
+  return (row >= 0 && row < m_rowCount && col >= 0 && col < m_colCount);
 }
 
 Cell GridMap::getCell(int row, int column) {

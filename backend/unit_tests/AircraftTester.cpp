@@ -85,8 +85,10 @@ TEST(AircraftTest, OutofBoundsMoveTest) {
 TEST(AircraftTest, ScanningTest) {
   GridMap gridMap(6, "test_csv/scanTestCSV.csv");
   Aircraft aircraft(0, Direction::dir_EAST, 0, gridMap);
+  int counter = 0;
 
-  aircraft.scan();
+  counter = aircraft.scan();
+  EXPECT_EQ(counter, 4);
   EXPECT_TRUE(aircraft.getMap().isScanned(0, 1));
   EXPECT_TRUE(aircraft.getMap().isScanned(0, 2));
   EXPECT_TRUE(aircraft.getMap().isScanned(1, 1));
@@ -102,8 +104,9 @@ TEST(AircraftTest, ScanningTest) {
   EXPECT_EQ(aircraft.getCurCol(), 2);
   EXPECT_EQ(aircraft.getCurRow(), 1);
   EXPECT_EQ(aircraft.getDir(), Direction::dir_SOUTH);
-  aircraft.scan();
+  counter = aircraft.scan();
 
+  EXPECT_EQ(counter, 6);
   EXPECT_TRUE(aircraft.getMap().isScanned(2, 1));
   EXPECT_TRUE(aircraft.getMap().isScanned(2, 2));
   EXPECT_TRUE(aircraft.getMap().isScanned(2, 3));
@@ -123,8 +126,9 @@ TEST(AircraftTest, ScanningTest) {
   EXPECT_EQ(aircraft.getCurCol(), 3);
   EXPECT_EQ(aircraft.getCurRow(), 1);
   EXPECT_EQ(aircraft.getDir(), Direction::dir_NORTH);
-  aircraft.scan();
+  counter = aircraft.scan();
 
+  EXPECT_EQ(counter, 2);
   EXPECT_TRUE(aircraft.getMap().isScanned(0, 2));
   EXPECT_TRUE(aircraft.getMap().isScanned(0, 3));
   EXPECT_TRUE(aircraft.getMap().isScanned(0, 4));
@@ -141,8 +145,9 @@ TEST(AircraftTest, ScanningTest) {
   EXPECT_EQ(aircraft.getCurCol(), 3);
   EXPECT_EQ(aircraft.getCurRow(), 4);
   EXPECT_EQ(aircraft.getDir(), Direction::dir_WEST);
-  aircraft.scan();
+  counter = aircraft.scan();
 
+  EXPECT_EQ(counter, 4);
   EXPECT_TRUE(aircraft.getMap().isScanned(4, 2));
   EXPECT_TRUE(aircraft.getMap().isScanned(5, 2));
   EXPECT_TRUE(aircraft.getMap().isScanned(5, 1));
