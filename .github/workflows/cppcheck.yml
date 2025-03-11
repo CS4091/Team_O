@@ -1,0 +1,28 @@
+name: Cppcheck
+
+on: [push, pull_request]
+
+jobs:
+  Static_Analysis:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Install cppcheck
+      run: sudo apt-get install cppcheck
+
+    - name: Run cppcheck and check for issues
+      run: |
+        cppcheck --output-file=cppcheck_report.txt backend/src/.
+        if [ -s cppcheck_report.txt ]; then
+          echo "Issues found by cppcheck."
+          exit 1
+        fi
+
+    - name: Upload cppcheck report
+      uses: actions/upload-artifact@v4
+      with:
+        name: cppcheck-report
+        path: cppcheck_report.txt
