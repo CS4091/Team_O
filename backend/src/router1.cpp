@@ -11,7 +11,6 @@
 #include <utility>
 #include <vector>
 
-// #define PERCENT80 0.8
 constexpr float PERCENT80 = 0.8;
 
 namespace {
@@ -327,7 +326,7 @@ bool simulateAction(const State &curState, const Moves &move,
 /*
  * @brief If a simple rotation does not lead to a correct move, the aircaft must
  * reroute itself to a valid Cell in multiple moves. This function computes the
- * path the aircraft must take to the nearest valid move use A* search with
+ * path the aircraft must take to the nearest valid move using A* search with
  * manhatan distance as the hueristic.
  *
  * @read https://en.wikipedia.org/wiki/A*_search_algorithm
@@ -411,7 +410,9 @@ std::vector<Moves> RoutePlanner::findRoute() {
 
   // Make an initial scan at the starting location
   scannedCount = scannedCount + m_aircraft.scan();
-  std::cout << scannedCount;
+  std::cout << "New scan count: " << scannedCount << ".Target is "
+            << targetScanCount
+            << ". Remaining: " << targetScanCount - scannedCount << ".\n";
 
   // Continue looping until coverage requirement is hit
   while (scannedCount < targetScanCount) {
