@@ -2,9 +2,33 @@
 #define AIRCRAFT
 
 #include "map.h"
+#include <iostream>
 
 // Defined directions for the aircraft to be facing
-enum class Direction { dir_NORTH, dir_SOUTH, dir_EAST, dir_WEST };
+enum class Direction {
+  dir_NORTH = 0,
+  dir_SOUTH = 1,
+  dir_EAST = 2,
+  dir_WEST = 3
+};
+
+inline std::ostream &operator<<(std::ostream &os, const Direction dir) {
+  switch (dir) {
+  case Direction::dir_NORTH:
+    os << "NORTH";
+    break;
+  case Direction::dir_SOUTH:
+    os << "SOUTH";
+    break;
+  case Direction::dir_EAST:
+    os << "EAST";
+    break;
+  case Direction::dir_WEST:
+    os << "WEST";
+    break;
+  }
+  return os;
+}
 
 /*
  * @brief Represents an Aircraft object as well as its direction and location on
@@ -54,7 +78,7 @@ public:
   // TODO: whatever other functions are needed
 
   /*
-   * @breif Getter for the aircraft's current row.
+   * @breif Getter for the aircraft's 0-index current row.
    *
    * @return The aircraft's current row.
    */
@@ -68,7 +92,7 @@ public:
   int getCurCol() const { return m_curCol; }
 
   /*
-   * @brief Getter for the aircraft's 0-indexed current direction.
+   * @brief Getter for the aircraft's current direction.
    *
    * @return The aircraft's current direction.
    */
