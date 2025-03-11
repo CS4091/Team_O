@@ -379,8 +379,8 @@ std::vector<Moves> computePath(const std::pair<int, int> &curPos,
         AStarNode nextNode;
         nextNode.state = nextState;
         nextNode.moves = node.moves;
-	std::cout << action << std::endl;
-      totalMoves++;
+        std::cout << action << std::endl;
+        totalMoves++;
         nextNode.moves.push_back(action);
         nextNode.cost = node.cost + 1; // Assume each move has a cost of 1.
         nextNode.f = nextNode.cost +
@@ -397,9 +397,11 @@ std::vector<Moves> computePath(const std::pair<int, int> &curPos,
 } // namespace
 
 std::vector<Moves> RoutePlanner::findRoute() {
-  const int targetScanCount =
-      std::ceil(PERCENT80 * m_aircraft.getMap().getTraversableCount()); // TODO: Decide if the 80% should include
-                                       // all Cells or only traversable Cells
+  const int targetScanCount = std::ceil(
+      PERCENT80 *
+      m_aircraft.getMap()
+          .getTraversableCount()); // TODO: Decide if the 80% should include
+                                   // all Cells or only traversable Cells
   int scannedCount = 0;
 
   std::cout << "Aircraft start at [" << m_aircraft.getCurRow() << "]["
@@ -443,7 +445,7 @@ std::vector<Moves> RoutePlanner::findRoute() {
                 << ". Remaining: " << targetScanCount - scannedCount << ".\n";
       if (forwardPositionValid(m_aircraft, m_aircraft.getMap())) {
         m_aircraft.moveForward();
-      totalMoves++;
+        totalMoves++;
         std::cout << "MOVE FORWARD TO [" << m_aircraft.getCurRow() << "]["
                   << m_aircraft.getCurCol() << "]\n";
         m_moveList.push_back(Moves::move_FORWARD);
@@ -466,7 +468,7 @@ std::vector<Moves> RoutePlanner::findRoute() {
                 << ". Remaining: " << targetScanCount - scannedCount << ".\n";
       if (forwardPositionValid(m_aircraft, m_aircraft.getMap())) {
         m_aircraft.moveForward();
-      totalMoves++;
+        totalMoves++;
         std::cout << "MOVE FORWARD TO [" << m_aircraft.getCurRow() << "]["
                   << m_aircraft.getCurCol() << "]\n";
         m_moveList.push_back(Moves::move_FORWARD);
@@ -503,7 +505,7 @@ std::vector<Moves> RoutePlanner::findRoute() {
       for (const auto &move : path) {
         if (move == Moves::move_FORWARD) {
           m_aircraft.moveForward();
-      totalMoves++;
+          totalMoves++;
           std::cout << "MOVE FORWARD TO [" << m_aircraft.getCurRow() << "]["
                     << m_aircraft.getCurCol() << "]\n";
           m_moveList.push_back(Moves::move_FORWARD);
@@ -514,7 +516,7 @@ std::vector<Moves> RoutePlanner::findRoute() {
                     << ".\n";
         } else if (move == Moves::move_TURNLEFT) {
           m_aircraft.turnLeft();
-      totalMoves++;
+          totalMoves++;
           std::cout << "TURN LEFT\n";
           m_moveList.push_back(Moves::move_TURNLEFT);
           scannedCount += m_aircraft.scan();
@@ -524,7 +526,7 @@ std::vector<Moves> RoutePlanner::findRoute() {
                     << ".\n";
         } else if (move == Moves::move_TURNRIGHT) {
           m_aircraft.turnRight();
-      totalMoves++;
+          totalMoves++;
           std::cout << "TURN RIGHT\n";
           m_moveList.push_back(Moves::move_TURNRIGHT);
           scannedCount += m_aircraft.scan();

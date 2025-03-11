@@ -17,10 +17,9 @@ inline std::ostream &operator<<(std::ostream &os, const Moves move) {
   case Moves::move_TURNRIGHT:
     os << "TURN RIGHT (REROUTE)";
     break;
-    }
+  }
   return os;
 }
-
 
 /*
  * @brief Represents the set of functions completing the route planning

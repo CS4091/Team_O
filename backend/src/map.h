@@ -114,13 +114,13 @@ public:
    *
    * @return The number of traversable Cells.
    */
-  int getTraversableCount() const {return m_totalTraversable; }
+  int getTraversableCount() const { return m_totalTraversable; }
 
 private:
   std::vector<std::vector<Cell>> m_grid; // 0-indexed vector of vectors
   int m_colCount = 0;                    // 1-indexed grid column count
   int m_rowCount = 0;                    // 1-indexed grid row count
-  int m_totalTraversable = 0;            // The total number of traversable Cells
+  int m_totalTraversable = 0; // The total number of traversable Cells
 };
 
 #endif

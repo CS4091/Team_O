@@ -149,16 +149,15 @@ GridMap::GridMap(int width, std::string filePath) : m_colCount(width) {
   // add the number of rows to the ySize private member
   m_rowCount = rowCount;
 
-// For each row...
+  // For each row...
   for (int row = 0; row < m_rowCount; row++) {
     // For each column...
     for (int column = 0; column < m_colCount; column++) {
       if (isTraversable(row, column)) {
-	m_totalTraversable++;
+        m_totalTraversable++;
       }
     }
-
-}
+  }
 }
 
 void GridMap::printer() {

@@ -147,11 +147,11 @@ int scanCells(const int startRow, const int startCol, const int endRow,
       // If the Cell loctation is on the map...
       if (scanRow >= 0 && scanCol >= 0 && scanRow < map.getRowCount() &&
           scanCol < map.getColCount() && !map.isScanned(scanRow, scanCol)) {
-	if (!map.isScanned(scanRow, scanCol)) {
-        // Mark it as scanned
-        map.markScanned(scanRow, scanCol);
-        newScanCount++;
-	}
+        if (!map.isScanned(scanRow, scanCol)) {
+          // Mark it as scanned
+          map.markScanned(scanRow, scanCol);
+          newScanCount++;
+        }
       }
     }
   }
