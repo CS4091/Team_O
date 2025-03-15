@@ -66,7 +66,7 @@ void nonNumericError(std::string const val, int const rowCount,
 }
 
 /*
- * @breif Helper function for the GridMap constructor, enforcing each row to
+ * @brief Helper function for the GridMap constructor, enforcing each row to
  * be the proper width.
  *
  * @param rowVector The row being checked.
@@ -96,8 +96,8 @@ void rowVectorValidation(std::vector<Cell> &rowVector, const int xSize,
 }
 
 /*
- * @breif 2D array BFS that searches for the closest traversable Cell from an
- * arbitary point.
+ * @brief 2D array BFS that searches for the closest traversable Cell from an
+ * arbitrary point.
  *
  * @param startRow The row to start BFS at.
  * @param startCol The column to start BFS at.
@@ -141,7 +141,7 @@ std::pair<int, int> closestTraversableBFS(const int &startRow,
       const int newRow = curr.row + dRow[i];
       const int newCol = curr.col + dCol[i];
 
-      // Ensure new Cell is witin bounds and not yet visited
+      // Ensure new Cell is within bounds and not yet visited
       if (map.isWithinBounds(newRow, newCol) && !visited[newRow][newCol]) {
         visited[newRow][newCol] = true;
         q.push({newRow, newCol});
@@ -205,7 +205,7 @@ bool contiguousTraversableBFS(const int &startRow, const int &startCol,
       const int newRow = curr.row + dRow[i];
       const int newCol = curr.col + dCol[i];
 
-      // Ensure new Cell is witin bounds and not yet visited
+      // Ensure new Cell is within bounds and not yet visited
       if (map.isWithinBounds(newRow, newCol) && !visited[newRow][newCol] &&
           map.isTraversable(newRow, newCol)) {
         visited[newRow][newCol] = true;
