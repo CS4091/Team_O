@@ -53,7 +53,7 @@
       "-c",
       "-Wall",
       "-Wextra",
-      "-std=c++11",
+      "-std=c++14",
       "unit_tests/AircraftTester.cpp"
     ],
     "directory": "/home/ethan/Code/Team_O/backend",
@@ -65,7 +65,7 @@
       "-c",
       "-Wall",
       "-Wextra",
-      "-std=c++11",
+      "-std=c++14",
       "unit_tests/GridMapTester.cpp"
     ],
     "directory": "/home/ethan/Code/Team_O/backend",
@@ -77,7 +77,7 @@
       "-c",
       "-Wall",
       "-Wextra",
-      "-std=c++11",
+      "-std=c++14",
       "unit_tests/RouterTester.cpp"
     ],
     "directory": "/home/ethan/Code/Team_O/backend",

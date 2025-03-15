@@ -4,7 +4,9 @@ bugprone-*,
 clang-analyzer-*,
 cppcoreguidelines-*,
 -cppcoreguidelines-pro-type-member-init,
+-cppcoreguidelines-pro-bounds-constant-array-index,
 misc-*,
 -misc-non-private-member-variables-in-classes,
+-misc-no-recursion,
 '
 FormatStyle: LLVM 

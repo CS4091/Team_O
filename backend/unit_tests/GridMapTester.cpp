@@ -10,9 +10,11 @@ TEST(GridMapTest, ValidCSVTest) {
   ASSERT_EQ(gridMap.getColCount(), 3);
 
   // Verify cell values.
-  EXPECT_TRUE(gridMap.getCell(0, 0).traversable);  // 1
+  EXPECT_FALSE(gridMap.getCell(0, 0)
+                   .traversable); // 1, but untraversable because of flood-fill
   EXPECT_FALSE(gridMap.getCell(0, 1).traversable); // 0
-  EXPECT_TRUE(gridMap.getCell(0, 2).traversable);  // 1
+  EXPECT_FALSE(gridMap.getCell(0, 2)
+                   .traversable); // 1, but untraversable because of flood-fill
   EXPECT_FALSE(gridMap.getCell(1, 0).traversable); // 0
   EXPECT_TRUE(gridMap.getCell(1, 1).traversable);  // 1
   EXPECT_FALSE(gridMap.getCell(1, 2).traversable); // 0
@@ -44,7 +46,8 @@ TEST(GridMapTest, CSVWithBadNumericValueTest) {
   // verify Cell values.
   EXPECT_TRUE(gridMap.getCell(0, 0).traversable);  // 1
   EXPECT_FALSE(gridMap.getCell(0, 1).traversable); // 2 -> error -> false
-  EXPECT_TRUE(gridMap.getCell(0, 2).traversable);  // 1
+  EXPECT_FALSE(gridMap.getCell(0, 2)
+                   .traversable); // 1, but untraversable beacuse of flood-fill
 
   EXPECT_FALSE(gridMap.getCell(0, 0).scanned);
   EXPECT_FALSE(gridMap.getCell(0, 1).scanned);
@@ -98,7 +101,8 @@ TEST(GridMapTest, RowVectorTruncationTest) {
   // verify Cell values.
   EXPECT_TRUE(gridMap.getCell(0, 0).traversable);  // 1
   EXPECT_FALSE(gridMap.getCell(0, 1).traversable); // 0
-  EXPECT_TRUE(gridMap.getCell(0, 2).traversable);  // 1
+  EXPECT_FALSE(gridMap.getCell(0, 2)
+                   .traversable); // 1, but untraversable because of flood-fill
   // The extra value "0" is ignored.
 
   EXPECT_FALSE(gridMap.getCell(0, 0).scanned);
@@ -121,4 +125,11 @@ TEST(GridMapTest, gridScannedTest) {
 
   // Fail assertion on attempting to access non existent cell
   EXPECT_DEATH(gridMap.markScanned(99, 99), "^.*$");
+}
+
+TEST(GridMapTest, floodFillTest) {
+  // Create a GridMap with width 3 and expected height 2.
+  GridMap gridMap(100, "test_csv/bigTestGrid.csv");
+  EXPECT_FALSE(gridMap.isTraversable(11, 99));
+  EXPECT_TRUE(gridMap.isTraversable(23, 34));
 }
