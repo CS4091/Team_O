@@ -18,8 +18,17 @@ PYBIND11_MODULE(map_binding, m) {
       .def("isScanned", &GridMap::isScanned, py::arg("row"), py::arg("column"))
       .def("markScanned", &GridMap::markScanned, py::arg("row"),
            py::arg("column"))
+      .def("markColored", &GridMap::markColored, py::arg("row"),
+           py::arg("column"))
+      .def("markUntraversable", &GridMap::markUntraversable, py::arg("row"),
+           py::arg("column"))
+      .def("isColored", &GridMap::isColored, py::arg("row"), py::arg("column"))
+      .def("isWithinBounds", &GridMap::isColored, py::arg("row"),
+           py::arg("col"))
       .def("printer", &GridMap::printer)
+      .def("mapStats", &GridMap::mapStats)
       .def("getRowCount", &GridMap::getRowCount)
       .def("getColCount", &GridMap::getColCount)
-      .def("getCell", &GridMap::getCell, py::arg("row"), py::arg("column"));
+      .def("getCell", &GridMap::getCell, py::arg("row"), py::arg("column"))
+      .def("getTraversableCount", &GridMap::getTraversableCount);
 }
