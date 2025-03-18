@@ -410,7 +410,7 @@ std::vector<Moves> RoutePlanner::findRoute() {
 
   // Make an initial scan at the starting location
   scannedCount = scannedCount + m_aircraft.scan();
-  std::cout << "New scan count: " << scannedCount << ".Target is "
+  std::cout << "New scan count: " << scannedCount << ". Target is "
             << targetScanCount
             << ". Remaining: " << targetScanCount - scannedCount << ".\n";
 
@@ -428,7 +428,7 @@ std::vector<Moves> RoutePlanner::findRoute() {
                 << m_aircraft.getCurCol() << "]\n";
       m_moveList.push_back(Moves::move_FORWARD);
       scannedCount += m_aircraft.scan();
-      std::cout << "New scan count: " << scannedCount << ".Target is "
+      std::cout << "New scan count: " << scannedCount << ". Target is "
                 << targetScanCount
                 << ". Remaining: " << targetScanCount - scannedCount << ".\n";
       // If forward move is blocked or no new Cells scanned, turn to continue
@@ -444,7 +444,7 @@ std::vector<Moves> RoutePlanner::findRoute() {
       std::cout << "TURN LEFT\n";
       m_moveList.push_back(Moves::move_TURNLEFT);
       scannedCount += m_aircraft.scan();
-      std::cout << "New scan count: " << scannedCount << ".Target is "
+      std::cout << "New scan count: " << scannedCount << ". Target is "
                 << targetScanCount
                 << ". Remaining: " << targetScanCount - scannedCount << ".\n";
       // verify again that forward move is possible, then do it and scan
@@ -455,7 +455,7 @@ std::vector<Moves> RoutePlanner::findRoute() {
                   << m_aircraft.getCurCol() << "]\n";
         m_moveList.push_back(Moves::move_FORWARD);
         scannedCount += m_aircraft.scan();
-        std::cout << "New scan count: " << scannedCount << ".Target is "
+        std::cout << "New scan count: " << scannedCount << ". Target is "
                   << targetScanCount
                   << ". Remaining: " << targetScanCount - scannedCount << ".\n";
       }
@@ -470,7 +470,7 @@ std::vector<Moves> RoutePlanner::findRoute() {
       std::cout << "TURN RIGHT\n";
       m_moveList.push_back(Moves::move_TURNRIGHT);
       scannedCount += m_aircraft.scan();
-      std::cout << "New scan count: " << scannedCount << ".Target is "
+      std::cout << "New scan count: " << scannedCount << ". Target is "
                 << targetScanCount
                 << ". Remaining: " << targetScanCount - scannedCount << ".\n";
       // verify again that forward move is possible, then do it and scan
@@ -481,7 +481,7 @@ std::vector<Moves> RoutePlanner::findRoute() {
                   << m_aircraft.getCurCol() << "]\n";
         m_moveList.push_back(Moves::move_FORWARD);
         scannedCount += m_aircraft.scan();
-        std::cout << "New scan count: " << scannedCount << ".Target is "
+        std::cout << "New scan count: " << scannedCount << ". Target is "
                   << targetScanCount
                   << ". Remaining: " << targetScanCount - scannedCount << ".\n";
       }
@@ -523,7 +523,7 @@ std::vector<Moves> RoutePlanner::findRoute() {
                     << m_aircraft.getCurCol() << "]\n";
           m_moveList.push_back(Moves::move_FORWARD);
           scannedCount += m_aircraft.scan();
-          std::cout << "New scan count: " << scannedCount << ".Target is "
+          std::cout << "New scan count: " << scannedCount << ". Target is "
                     << targetScanCount
                     << ". Remaining: " << targetScanCount - scannedCount
                     << ".\n";
@@ -533,7 +533,7 @@ std::vector<Moves> RoutePlanner::findRoute() {
           std::cout << "TURN LEFT\n";
           m_moveList.push_back(Moves::move_TURNLEFT);
           scannedCount += m_aircraft.scan();
-          std::cout << "New scan count: " << scannedCount << ".Target is "
+          std::cout << "New scan count: " << scannedCount << ". Target is "
                     << targetScanCount
                     << ". Remaining: " << targetScanCount - scannedCount
                     << ".\n";
@@ -543,7 +543,7 @@ std::vector<Moves> RoutePlanner::findRoute() {
           std::cout << "TURN RIGHT\n";
           m_moveList.push_back(Moves::move_TURNRIGHT);
           scannedCount += m_aircraft.scan();
-          std::cout << "New scan count: " << scannedCount << ".Target is "
+          std::cout << "New scan count: " << scannedCount << ". Target is "
                     << targetScanCount
                     << ". Remaining: " << targetScanCount - scannedCount
                     << ".\n";
