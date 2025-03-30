@@ -38,7 +38,8 @@ inline std::ostream &operator<<(std::ostream &os, const Direction dir) {
 class Aircraft {
 public:
   /*
-   * @brief Constructs an Aircraft object.
+   * @brief Constructs an Aircraft object, repositions Aircraft to traversable
+   * Cell if applicable.
    *
    * @param startRow The 0-indexed row the Aircraft starts at.
    * @param startDir The Direction the Aircraft starts facing.
@@ -47,62 +48,73 @@ public:
    *
    * @return Nothing.
    */
-  Aircraft(int startRow, Direction startDir, int startCol, GridMap map)
-      : m_curRow(startRow), m_curCol(startCol), m_dir(startDir), m_map(map) {}
+  Aircraft(int startRow, Direction startDir, int startCol, GridMap map);
 
   /*
-   * @brief Moves the aircraft forward one Cell in the current direction if
+   * @brief Moves the Aircraft forward one Cell in the current direction if
    * possible, else throws exception.
    *
    * @return Nothing.
    */
   void moveForward();
   /*
-   * @brief Rotates the aircraft's current direction to the left.
+   * @brief Rotates the Aircraft's current direction to the left.
    *
    * @return Nothing.
    */
   void turnLeft();
   /*
-   * @brief Rotates the aircraft's current direction to the right.
+   * @brief Rotates the Aircraft's current direction to the right.
    *
    * @return Nothing.
    */
   void turnRight();
   /*
-   * @brief Scans Cells in a 2x3 area in front of the aircraft.
+   * @brief Scans Cells in a 2x3 area in front of the Aircraft.
    *
    * @return The number of Cells scanned.
    */
   int scan();
 
-  // TODO: whatever other functions are needed
-
   /*
-   * @breif Getter for the aircraft's 0-index current row.
+   * @breif Getter for the Aircraft's 0-indexed current row.
    *
-   * @return The aircraft's current row.
+   * @return The Aircraft's current row.
    */
   int getCurRow() const { return m_curRow; }
 
   /*
-   * @breif Getter for the aircraft's 0-indexed current column.
+   * @brief Setter for the Aircraft's 0-indexed current row.
    *
-   * @return The aircraft's current column.
+   * @return Nothing.
+   */
+  void setRow(const int row) { m_curRow = row; }
+
+  /*
+   * @breif Getter for the Aircraft's 0-indexed current column.
+   *
+   * @return The Aircraft's current column.
    */
   int getCurCol() const { return m_curCol; }
 
   /*
-   * @brief Getter for the aircraft's current direction.
+   * @brief Setter for the Aircraft's 0-indexed current column.
    *
-   * @return The aircraft's current direction.
+   * @return Nothing.
+   */
+  void setCol(const int col) { m_curCol = col; }
+
+  /*
+   * @brief Getter for the Aircraft's current direction.
+   *
+   * @return The Aircraft's current direction.
    */
   Direction getDir() const { return m_dir; }
 
   /*
-   * @brief Getter for the aircraft's GridMap.
+   * @brief Getter for the Aircraft's GridMap.
    *
-   * @return The aircraft's GridMap.
+   * @return The Aircraft's GridMap.
    */
   GridMap getMap() const { return m_map; }
 
