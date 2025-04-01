@@ -1,7 +1,10 @@
 #include "aircraft.h"
 #include "map.h"
+#include <array>
 #include <cassert>
 #include <iostream>
+#include <queue>
+#include <vector>
 
 namespace {
 
@@ -157,8 +160,79 @@ int scanCells(const int startRow, const int startCol, const int endRow,
   }
   return newScanCount;
 }
+
+/*
+ * @brief 2D array BFS that searches for the closest traversable Cell from an
+ * arbitrary point and changes Aircraft location to that Cell.
+ *
+ * @param startRow The row to start BFS at.
+ * @param startCol The column to start BFS at.
+ * @param map The GridMap being searched.
+ *
+ * @return Nothing.
+ */
+void closestTraversableBFS(Aircraft &aircraft, const GridMap &map) {
+  struct BFSCell {
+    int row;
+    int col;
+  };
+
+  const int rows = map.getRowCount();
+  const int cols = map.getColCount();
+
+  // visited matrix ensures each Cell is visited only once
+  std::vector<std::vector<bool>> visited(rows, std::vector<bool>(cols, false));
+
+  // BFS queue
+  std::queue<BFSCell> q;
+  q.push({aircraft.getCurRow(), aircraft.getCurCol()});
+  visited[aircraft.getCurRow()][aircraft.getCurCol()] = true;
+
+  // Directions for movement (up, down, left, and right)
+  std::array<int, 4> dRow = {0, 0, -1, 1};
+  std::array<int, 4> dCol = {-1, 1, 0, 0};
+
+  while (!q.empty()) {
+    const BFSCell curr = q.front();
+    q.pop();
+
+    // Check if current Cell is traversable
+    if (map.isTraversable(curr.row, curr.col)) {
+      std::cerr << "Aircraft starting position changed to the cloesest "
+                   "traversable Cell ["
+                << curr.row << "][" << curr.col << "]\n";
+      aircraft.setRow(curr.row);
+      aircraft.setCol(curr.col);
+      return;
+    }
+
+    // If not, explore the neighboring Cells
+    for (int i = 0; i < 4; i++) {
+      const int newRow = curr.row + dRow[i];
+      const int newCol = curr.col + dCol[i];
+
+      // Ensure new Cell is within bounds and not yet visited
+      if (map.isWithinBounds(newRow, newCol) && !visited[newRow][newCol]) {
+        visited[newRow][newCol] = true;
+        q.push({newRow, newCol});
+      }
+    }
+  }
+  // No traversable Cell found
+  throw std::exception();
+}
+
 } // namespace
 
+Aircraft::Aircraft(int startRow, Direction startDir, int startCol, GridMap map)
+    : m_curRow(startRow), m_curCol(startCol), m_dir(startDir), m_map(map) {
+  // Enforce a valid starting position
+  if (!map.isTraversable(startRow, startCol)) {
+    std::cerr << "Starting position at [" << startRow << "][" << startCol
+              << "] is untraversable. A new position must be found.\n";
+    closestTraversableBFS(*this, map);
+  }
+}
 void Aircraft::moveForward() {
   // For each direcion, determine if moving forward is a valid move and the
   // space is traversable, if not throw an exception, if it is, move forward

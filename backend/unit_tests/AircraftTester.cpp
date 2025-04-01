@@ -156,3 +156,16 @@ TEST(AircraftTest, ScanningTest) {
   EXPECT_FALSE(aircraft.getMap().isScanned(5, 0));
   EXPECT_FALSE(aircraft.getMap().isScanned(5, 3));
 }
+
+TEST(AircraftTest, TraversabilityTest) {
+  GridMap gridMap(25, "test_csv/smallTestGrid.csv");
+  Aircraft aircraft(4, Direction::dir_EAST, 8, gridMap);
+  EXPECT_TRUE(
+      gridMap.isTraversable(aircraft.getCurRow(), aircraft.getCurCol()));
+
+  Aircraft aircraft2(9, Direction::dir_EAST, 2, gridMap);
+  EXPECT_EQ(aircraft2.getCurRow(), 9);
+  EXPECT_EQ(aircraft2.getCurCol(), 2);
+  EXPECT_TRUE(
+      gridMap.isTraversable(aircraft2.getCurRow(), aircraft2.getCurCol()));
+}
