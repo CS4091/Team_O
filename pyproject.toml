@@ -1,11 +1,26 @@
+[build-system]
+requires = ["pybind11"]
+
+[project]
+name = "O-Flights"
+version = "0.0.2"
+requires-python = ">=3.12.6"
+authors = [
+    { name = "Jack Wyeth", email = "jwf2z@umsystem.edu" },
+    { name = "Ethan Heckart", email = "ehhf6@umsystem.edu" },
+    { name = "Matthew Lopez", email = "malwpp@umsystem.edu" },
+    { name = "Ryan Kluesner", email = "rak4dt@umsystem.edu" },
+    { name = "Jimmy Hoerschgen", email = "jthpqb@umsystem.edu" },
+]
+description = "Missouri S&T - Computer Science Capstone II Project - Spring 2025 - Team O"
+readme = "README.md"
+license = "BSD-3-Clause"
+
+[project.urls]
+Repository = "https://github.com/CS4091/Team_O/tree/main"
+
 [tool.black]
 line-length = 79
-
-[tool.setuptools.packages]
-find = {}
-
-[tool.setuptools.package-data]
-sctkpy = ["config.toml", "templates/*"]
 
 [tool.flake8]
 max-line-length = 79
