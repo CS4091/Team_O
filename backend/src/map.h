@@ -8,7 +8,7 @@
 struct Cell {
   bool traversable;
   bool scanned;
-  // TODO: need anything else?
+  bool colored;
 };
 
 /*
@@ -26,7 +26,8 @@ public:
    * data, but instead convert bad data to non-traversable Cells, or truncate
    * extra Cells in a row with too many columns.
    *
-   * @param width Represents the x-dimension (number of columns) of the grid.
+   * @param width Represents the 1-indexed x-dimension (number of columns) of
+   * the grid.
    * @param filePath The location of the CSV file the map is populated from.
    *
    * @return Nothing.
@@ -57,13 +58,55 @@ public:
    * If the Cell was already scanned, it remains scanned and a note is printed.
    *
    * @param row The row (y coordinate) being accessed.
-   * @param column the column (x coordinate) being accessed.
+   * @param column The column (x coordinate) being accessed.
    *
    * @return Nothing.
    */
   void markScanned(int row, int column);
-  // TODO: Think of other needed functions
 
+  /*
+   * @breif Marks a Cell as colored.
+   *
+   * @param row The row (y coordinate) being accessed.
+   * @param column The column (x coordinate) being accessed.
+   *
+   * @return Nothing.
+   */
+  void markColored(int row, int column);
+
+  /*
+   * @brief Marks a Cell as untraversable.
+   *
+   * @param row The row (y coordinate) being marked as untraversable.
+   * @param column The column (x coordinate) being makred as untraversable.
+   *
+   * @return Nothing.
+   */
+  void markUntraversable(int row, int column) {
+    m_grid[row][column].traversable = false;
+  }
+
+  /*
+   * @brief Determines if a Cell is colored.
+   *
+   * @param row The row (y coodinate) being examined.
+   * @param column (x coordinate) being examined.
+   *
+   * @return True if a Cell is colored, else False.
+   */
+  bool isColored(int row, int column) const {
+    return m_grid[row][column].colored;
+  }
+
+  /*
+   * @brief Determines if a position is within bounds of the map.
+   *
+   * @row The row whose position is being determined.
+   * @col The column whose position is being determined.
+   *
+   * @return True if the position is valid, else false.
+   */
+  bool isWithinBounds(int row, int col) const;
   /*
    * @brief Prints the grid map to the terminal.
    *
@@ -72,6 +115,13 @@ public:
    * @return Nothing.
    */
   void printer();
+
+  /*
+   *
+   *
+   *
+   */
+  void mapStats();
   /*
    * @brief Getter for the y-dimension (number of rows) of the grid.
    *
@@ -93,11 +143,18 @@ public:
    * @return The Cell at grid[row][column].
    */
   Cell getCell(int row, int column);
+  /*
+   * @brief Getter for the number of traversable Cells.
+   *
+   * @return The number of traversable Cells.
+   */
+  int getTraversableCount() const { return m_totalTraversable; }
 
 private:
   std::vector<std::vector<Cell>> m_grid; // 0-indexed vector of vectors
   int m_colCount = 0;                    // 1-indexed grid column count
   int m_rowCount = 0;                    // 1-indexed grid row count
+  int m_totalTraversable = 0; // The total number of traversable Cells
 };
 
 #endif

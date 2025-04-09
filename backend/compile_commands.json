@@ -5,11 +5,59 @@
       "-c",
       "-Wall",
       "-Wextra",
-      "-std=c++14",
+      "-std=c++11",
+      "src/aircraft.cpp"
+    ],
+    "directory": "/home/ethan/Code/Team_O/backend",
+    "file": "/home/ethan/Code/Team_O/backend/src/aircraft.cpp"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-Wall",
+      "-Wextra",
+      "-std=c++11",
+      "src/map_binding.cpp"
+    ],
+    "directory": "/home/ethan/Code/Team_O/backend",
+    "file": "/home/ethan/Code/Team_O/backend/src/map_binding.cpp"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-Wall",
+      "-Wextra",
+      "-std=c++11",
       "src/map.cpp"
     ],
     "directory": "/home/ethan/Code/Team_O/backend",
     "file": "/home/ethan/Code/Team_O/backend/src/map.cpp"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-Wall",
+      "-Wextra",
+      "-std=c++11",
+      "src/router1.cpp"
+    ],
+    "directory": "/home/ethan/Code/Team_O/backend",
+    "file": "/home/ethan/Code/Team_O/backend/src/router1.cpp"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-Wall",
+      "-Wextra",
+      "-std=c++14",
+      "unit_tests/AircraftTester.cpp"
+    ],
+    "directory": "/home/ethan/Code/Team_O/backend",
+    "file": "/home/ethan/Code/Team_O/backend/unit_tests/AircraftTester.cpp"
   },
   {
     "arguments": [
@@ -22,5 +70,17 @@
     ],
     "directory": "/home/ethan/Code/Team_O/backend",
     "file": "/home/ethan/Code/Team_O/backend/unit_tests/GridMapTester.cpp"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-Wall",
+      "-Wextra",
+      "-std=c++14",
+      "unit_tests/RouterTester.cpp"
+    ],
+    "directory": "/home/ethan/Code/Team_O/backend",
+    "file": "/home/ethan/Code/Team_O/backend/unit_tests/RouterTester.cpp"
   }
 ]
