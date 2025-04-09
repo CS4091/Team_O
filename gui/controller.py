@@ -1,8 +1,8 @@
-
-
 from tkinter import filedialog as fd
-from tkinter.messagebox import showerror, showwarning, showinfo
+from tkinter.messagebox import showerror, showinfo, showwarning
+
 from .model import Model
+
 
 class Controller:
     def __init__(self, model, view):
@@ -38,26 +38,19 @@ class Controller:
         try:
             # accepted file types
             filetypes = (
-                ('Text files', '*.txt'),
-                ('CSV files', '*.csv'),
-                ('All files', '*.*')
+                ("Text files", "*.txt"),
+                ("CSV files", "*.csv"),
+                ("All files", "*.*"),
             )
 
             # gather the files
             filenames = fd.askopenfilenames(
-                title='Open files',
-                initialdir='/',
-                filetypes=filetypes
+                title="Open files", initialdir="/", filetypes=filetypes
             )
 
             # only show info if there is a file selected
-            if filenames != '':
-                showinfo(
-                    title='Selected Files',
-                    message=filenames
-                )
+            if filenames != "":
+                showinfo(title="Selected Files", message=filenames)
 
-            
         except ValueError as error:
             self.view.show_error(error)
-            
