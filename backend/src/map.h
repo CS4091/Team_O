@@ -8,7 +8,7 @@
 struct Cell {
   bool traversable;
   bool scanned;
-  // TODO: need anything else?
+  bool colored;
 };
 
 /*
@@ -58,11 +58,45 @@ public:
    * If the Cell was already scanned, it remains scanned and a note is printed.
    *
    * @param row The row (y coordinate) being accessed.
-   * @param column the column (x coordinate) being accessed.
+   * @param column The column (x coordinate) being accessed.
    *
    * @return Nothing.
    */
   void markScanned(int row, int column);
+
+  /*
+   * @breif Marks a Cell as colored.
+   *
+   * @param row The row (y coordinate) being accessed.
+   * @param column The column (x coordinate) being accessed.
+   *
+   * @return Nothing.
+   */
+  void markColored(int row, int column);
+
+  /*
+   * @brief Marks a Cell as untraversable.
+   *
+   * @param row The row (y coordinate) being marked as untraversable.
+   * @param column The column (x coordinate) being makred as untraversable.
+   *
+   * @return Nothing.
+   */
+  void markUntraversable(int row, int column) {
+    m_grid[row][column].traversable = false;
+  }
+
+  /*
+   * @brief Determines if a Cell is colored.
+   *
+   * @param row The row (y coodinate) being examined.
+   * @param column (x coordinate) being examined.
+   *
+   * @return True if a Cell is colored, else False.
+   */
+  bool isColored(int row, int column) const {
+    return m_grid[row][column].colored;
+  }
 
   /*
    * @brief Determines if a position is within bounds of the map.
