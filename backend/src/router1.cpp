@@ -11,7 +11,8 @@
 #include <utility>
 #include <vector>
 
-constexpr float PERCENT80 = 0.8;
+constexpr float PERCENT1 = 0.01;
+constexpr float PERCENT100 = 1.0;
 
 namespace {
 using std::pair;
@@ -397,9 +398,23 @@ std::vector<Moves> computePath(const std::pair<int, int> &curPos,
 
 } // namespace
 
+RoutePlanner::RoutePlanner(Aircraft aircraft, float searchPercentage)
+    : m_aircraft(aircraft), m_searchPercentage(searchPercentage) {
+  // searchPercentage is a float that must be between 0.01 (1%) and 1.0 (100%)
+  if (searchPercentage < PERCENT1) {
+    std::cerr << "searchPercentage must be at least 0.01 (1%). Updating value "
+                 "to 1%\n";
+    m_searchPercentage = PERCENT1;
+  } else if (searchPercentage > PERCENT100) {
+    std::cerr << "searchPercentage cannot be greater than 1.0 (100%). Updating "
+                 "value to 100%\n";
+    m_searchPercentage = PERCENT100;
+  }
+}
+
 std::vector<Moves> RoutePlanner::findRoute() {
   const int targetScanCount =
-      std::ceil(PERCENT80 *
+      std::ceil(m_searchPercentage *
                 static_cast<float>(m_aircraft.getMap().getTraversableCount()));
 
   int scannedCount = 0;

@@ -17,8 +17,10 @@ public:
    * variable.
    *
    * @param aircraft The Aircraft the RoutePlanner will be routing.
+   * @param searchPercentage The percentage of traversable cells to be searched
+   * for completion. Bounds checking ensures 0 <= searchPercentage <= 1.
    */
-  RoutePlanner(Aircraft aircraft) : m_aircraft(aircraft) {}
+  RoutePlanner(Aircraft aircraft, float searchPercentage);
   /*
    * @brief A router for the Aircraft, based on a modified version of lawn
    * mowing algorithms combined with A* search. Finds a route that scans 80% of
@@ -43,11 +45,20 @@ public:
    * @return The 0-indexed location of the nearest unscanned column.
    */
   int findNearestUnscannedPosCol();
+  /*
+   * @brief Getter for the searchPercentage.
+   *
+   * @return The searchPercentage.
+   */
+  float getSearchPercentage() const { return m_searchPercentage; }
 
 private:
   Aircraft m_aircraft; // The aircraft being routed
   std::vector<Moves> m_moveList;
-  int m_totalMoves = 0;
+  int m_totalMoves =
+      0; // The number of moves the Aircraft uses to complete its route
+  float m_searchPercentage =
+      0.0; // The percentage of traversable Cells to be scanned
 };
 
 #endif
