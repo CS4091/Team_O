@@ -1,6 +1,6 @@
 from tkinter import filedialog as fd
-from tkinter.messagebox import showerror, showinfo, showwarning
-
+import csv
+from tkinter.messagebox import showerror, showwarning, showinfo
 from .model import Model
 
 
@@ -29,28 +29,21 @@ class Controller:
             # show an error message
             self.view.show_error(error)
 
-    def select_files(self):
+    def select_file(self):
         """
-        Select multiple files
+        Select a file to display
         :param files:
         :return:
         """
+        file_path = fd.askopenfilename(filetypes=[("CSV files", "*.csv")])
+        if not file_path:
+            return
+        
         try:
-            # accepted file types
-            filetypes = (
-                ("Text files", "*.txt"),
-                ("CSV files", "*.csv"),
-                ("All files", "*.*"),
-            )
-
-            # gather the files
-            filenames = fd.askopenfilenames(
-                title="Open files", initialdir="/", filetypes=filetypes
-            )
-
-            # only show info if there is a file selected
-            if filenames != "":
-                showinfo(title="Selected Files", message=filenames)
-
-        except ValueError as error:
-            self.view.show_error(error)
+            with open(file_path, newline='') as f:
+                reader = csv.reader(f)
+                data = [row for row in reader if row]  # skips the empty rows
+            self.view.display_map(data)
+            self.view.show_success("File loaded successfully!")
+        except Exception as e:
+            self.view.show_error(f"Failed to load file: {e}")
