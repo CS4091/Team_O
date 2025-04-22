@@ -434,7 +434,9 @@ std::vector<Moves> RoutePlanner::findRoute() {
   scannedCount = scannedCount + m_aircraft.scan();
   std::cout << "New scan count: " << scannedCount << ". Target is "
             << targetScanCount
-            << ". Remaining: " << targetScanCount - scannedCount << ". Potential moves remaining: " << m_moveLimit - m_totalMoves << ".\n";
+            << ". Remaining: " << targetScanCount - scannedCount
+            << ". Potential moves remaining: " << m_moveLimit - m_totalMoves
+            << ".\n";
 
   // Continue looping until coverage requirement is hit
   while ((scannedCount < targetScanCount) && (m_totalMoves < m_moveLimit)) {
@@ -452,7 +454,9 @@ std::vector<Moves> RoutePlanner::findRoute() {
       scannedCount += m_aircraft.scan();
       std::cout << "New scan count: " << scannedCount << ". Target is "
                 << targetScanCount
-            << ". Remaining: " << targetScanCount - scannedCount << ". Potential moves remaining: " << m_moveLimit - m_totalMoves << ".\n";
+                << ". Remaining: " << targetScanCount - scannedCount
+                << ". Potential moves remaining: " << m_moveLimit - m_totalMoves
+                << ".\n";
       // If forward move is blocked or no new Cells scanned, turn to continue
       // sweeping pattern
       // Try left move first
@@ -468,7 +472,9 @@ std::vector<Moves> RoutePlanner::findRoute() {
       scannedCount += m_aircraft.scan();
       std::cout << "New scan count: " << scannedCount << ". Target is "
                 << targetScanCount
-            << ". Remaining: " << targetScanCount - scannedCount << ". Potential moves remaining: " << m_moveLimit - m_totalMoves << ".\n";
+                << ". Remaining: " << targetScanCount - scannedCount
+                << ". Potential moves remaining: " << m_moveLimit - m_totalMoves
+                << ".\n";
       // verify again that forward move is possible, then do it and scan
       if (forwardPositionValid(m_aircraft, m_aircraft.getMap())) {
         m_aircraft.moveForward();
@@ -479,7 +485,9 @@ std::vector<Moves> RoutePlanner::findRoute() {
         scannedCount += m_aircraft.scan();
         std::cout << "New scan count: " << scannedCount << ". Target is "
                   << targetScanCount
-            << ". Remaining: " << targetScanCount - scannedCount << ". Potential moves remaining: " << m_moveLimit - m_totalMoves << ".\n";
+                  << ". Remaining: " << targetScanCount - scannedCount
+                  << ". Potential moves remaining: "
+                  << m_moveLimit - m_totalMoves << ".\n";
       }
       // If left move doesn't work, try right move
     } else if (isTurnValid(m_aircraft, Moves::move_TURNRIGHT,
@@ -494,7 +502,9 @@ std::vector<Moves> RoutePlanner::findRoute() {
       scannedCount += m_aircraft.scan();
       std::cout << "New scan count: " << scannedCount << ". Target is "
                 << targetScanCount
-            << ". Remaining: " << targetScanCount - scannedCount << ". Potential moves remaining: " << m_moveLimit - m_totalMoves << ".\n";
+                << ". Remaining: " << targetScanCount - scannedCount
+                << ". Potential moves remaining: " << m_moveLimit - m_totalMoves
+                << ".\n";
       // verify again that forward move is possible, then do it and scan
       if (forwardPositionValid(m_aircraft, m_aircraft.getMap())) {
         m_aircraft.moveForward();
@@ -505,7 +515,9 @@ std::vector<Moves> RoutePlanner::findRoute() {
         scannedCount += m_aircraft.scan();
         std::cout << "New scan count: " << scannedCount << ". Target is "
                   << targetScanCount
-            << ". Remaining: " << targetScanCount - scannedCount << ". Potential moves remaining: " << m_moveLimit - m_totalMoves << ".\n";
+                  << ". Remaining: " << targetScanCount - scannedCount
+                  << ". Potential moves remaining: "
+                  << m_moveLimit - m_totalMoves << ".\n";
       }
 
     } else {
@@ -548,7 +560,9 @@ std::vector<Moves> RoutePlanner::findRoute() {
             scannedCount += m_aircraft.scan();
             std::cout << "New scan count: " << scannedCount << ". Target is "
                       << targetScanCount
-            << ". Remaining: " << targetScanCount - scannedCount << ". Potential moves remaining: " << m_moveLimit - m_totalMoves << ".\n";
+                      << ". Remaining: " << targetScanCount - scannedCount
+                      << ". Potential moves remaining: "
+                      << m_moveLimit - m_totalMoves << ".\n";
           } else if (move == Moves::move_TURNLEFT) {
             m_aircraft.turnLeft();
             m_totalMoves++;
@@ -557,7 +571,9 @@ std::vector<Moves> RoutePlanner::findRoute() {
             scannedCount += m_aircraft.scan();
             std::cout << "New scan count: " << scannedCount << ". Target is "
                       << targetScanCount
-            << ". Remaining: " << targetScanCount - scannedCount << ". Potential moves remaining: " << m_moveLimit - m_totalMoves << ".\n";
+                      << ". Remaining: " << targetScanCount - scannedCount
+                      << ". Potential moves remaining: "
+                      << m_moveLimit - m_totalMoves << ".\n";
           } else if (move == Moves::move_TURNRIGHT) {
             m_aircraft.turnRight();
             m_totalMoves++;
@@ -566,14 +582,16 @@ std::vector<Moves> RoutePlanner::findRoute() {
             scannedCount += m_aircraft.scan();
             std::cout << "New scan count: " << scannedCount << ". Target is "
                       << targetScanCount
-            << ". Remaining: " << targetScanCount - scannedCount << ". Potential moves remaining: " << m_moveLimit - m_totalMoves << ".\n";
+                      << ". Remaining: " << targetScanCount - scannedCount
+                      << ". Potential moves remaining: "
+                      << m_moveLimit - m_totalMoves << ".\n";
           }
         }
       }
     }
   }
   std::cout << "TOTAL MOVES: " << m_totalMoves << std::endl;
-  return moves;
+  return m_moveList;
 }
 
 int RoutePlanner::findNearestUnscannedPosRow() {
