@@ -1,9 +1,8 @@
-
-
 from tkinter import filedialog as fd
 import csv
 from tkinter.messagebox import showerror, showwarning, showinfo
 from .model import Model
+
 
 class Controller:
     def __init__(self, model, view):
@@ -48,4 +47,3 @@ class Controller:
             self.view.show_success("File loaded successfully!")
         except Exception as e:
             self.view.show_error(f"Failed to load file: {e}")
-            

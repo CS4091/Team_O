@@ -1,10 +1,10 @@
-
-
-#import backend_binding
+# import backend_binding
 import tkinter as tk
+
+from .controller import Controller
 from .model import Model
 from .view import View
-from .controller import Controller
+
 
 class App(tk.Tk):
     def __init__(self):
@@ -14,7 +14,7 @@ class App(tk.Tk):
         self.title("Air-to-Ground Search Demo")
 
         # change the icon
-        # self.iconbitmap('./assets/pythontutorial.ico')        
+        # self.iconbitmap('./assets/pythontutorial.ico')
 
         # set window sizes
         window_width = 1000
@@ -39,7 +39,7 @@ class App(tk.Tk):
         self.rowconfigure(0, weight=1)
         # create the model
         model = Model()
-
+        
         # create the view and place it on the root window
         view = View(self)
         self.config(menu=view.menu_bar)

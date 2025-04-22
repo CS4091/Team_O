@@ -2,6 +2,7 @@
 #include "map.h"
 #include "router1.h"
 #include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 
 namespace py = pybind11;
 
@@ -49,11 +50,19 @@ PYBIND11_MODULE(backend_binding, m) {
       .def("getDir", &Aircraft::getDir)
       .def("getMap", &Aircraft::getMap);
 
+  py::enum_<Moves>(m, "Moves")
+      .value("FORWARD", Moves::move_FORWARD)
+      .value("TURNLEFT", Moves::move_TURNLEFT)
+      .value("TURNRIGHT", Moves::move_TURNRIGHT)
+      .export_values();
+
   py::class_<RoutePlanner>(m, "RoutePlanner")
-      .def(py::init<Aircraft>(), py::arg("aircraft"))
+      .def(py::init<Aircraft, float>(), py::arg("aircraft"),
+           py::arg("searchPercentage"), py::arg("moveLimit"))
       .def("findRoute", &RoutePlanner::findRoute)
       .def("findNearestUnscannedPosRow",
            &RoutePlanner::findNearestUnscannedPosRow)
       .def("findNearestUnscannedPosCol",
-           &RoutePlanner::findNearestUnscannedPosCol);
+           &RoutePlanner::findNearestUnscannedPosCol)
+      .def("getSearchPercentage", &RoutePlanner::getSearchPercentage);
 }

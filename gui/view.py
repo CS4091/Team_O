@@ -4,6 +4,7 @@ import tkinter as tk
 from tkinter import ttk, Menu
 from .controller import Controller
 
+
 class View(ttk.Frame):
     """The View for the Graphical User Interface.
 
@@ -12,8 +13,9 @@ class View(ttk.Frame):
 
     Attributes:
         map_frame: private attribute that holds where the map will be showing.
-    
+
     """
+
     def __init__(self, parent):
         super().__init__(parent)
 
@@ -41,7 +43,15 @@ class View(ttk.Frame):
         self.map_frame_button1 = ttk.Button(self.map_frame, text='Previous Route')
         self.map_frame_button1.grid(column=0, row=0, padx=10)
 
-        self.map_frame_button2 = ttk.Button(self.map_frame, text='Save Route')
+        # buttons for map frame
+        self.map_frame_button1 = ttk.Button(
+            self.map_frame, text="Previous Route"
+        )
+        self.map_frame_button1.grid(
+            column=0, row=0, padx=10, sticky=tk.W + tk.E
+        )
+
+        self.map_frame_button2 = ttk.Button(self.map_frame, text="Save Route")
         self.map_frame_button2.grid(column=1, row=0, padx=10)
 
         self.map_frame_button3 = ttk.Button(self.map_frame, text='Next Route')
@@ -63,7 +73,6 @@ class View(ttk.Frame):
         # message label
         self.message_label = ttk.Label(self, text="", foreground="green")
         self.message_label.grid(column=0, row=0, sticky="nw")
-
 
         # set the controller
         self.controller = None
@@ -93,7 +102,6 @@ class View(ttk.Frame):
         self.message_label["text"] = message
         self.message_label["foreground"] = "green"
         self.message_label.after(3000, self.hide_message)
-
 
     def show_error(self, message):
         """
