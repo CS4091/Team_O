@@ -1,10 +1,10 @@
-
-
-#import backend_binding
+# import backend_binding
 import tkinter as tk
+
+from .controller import Controller
 from .model import Model
 from .view import View
-from .controller import Controller
+
 
 class App(tk.Tk):
     def __init__(self):
@@ -14,7 +14,7 @@ class App(tk.Tk):
         self.title("Air-to-Ground Search Demo")
 
         # change the icon
-        # self.iconbitmap('./assets/pythontutorial.ico')        
+        # self.iconbitmap('./assets/pythontutorial.ico')
 
         # set window sizes
         window_width = 1000
@@ -49,8 +49,8 @@ class App(tk.Tk):
         # create the model
         model = Model()
 
-        #example_map_path: str = "./backend/unit_tests/test_csv/mediumTestGrid.csv"
-        #test_model = Model()
+        # example_map_path: str = "./backend/unit_tests/test_csv/mediumTestGrid.csv"
+        # test_model = Model()
         # test_model.grid_map = backend_binding.GridMap(
         #     width=50, filePath=example_map_path
         # )
@@ -64,7 +64,7 @@ class App(tk.Tk):
         #     )
         # )
 
-        #test_model.router.findRoute()
+        # test_model.router.findRoute()
 
         # create the view and place it on the root window
         view = View(self)
@@ -75,4 +75,4 @@ class App(tk.Tk):
 
         # set the controller to view
         view.set_controller(controller)
-        #view.display_map(data)
+        # view.display_map(data)
