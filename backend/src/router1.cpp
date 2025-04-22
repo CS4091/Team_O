@@ -552,7 +552,7 @@ std::vector<Moves> RoutePlanner::findRoute() {
     }
   }
   std::cout << "TOTAL MOVES: " << m_totalMoves << std::endl;
-  return moves;
+  return m_moveList;
 }
 
 int RoutePlanner::findNearestUnscannedPosRow() {
