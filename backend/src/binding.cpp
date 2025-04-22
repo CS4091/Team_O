@@ -51,7 +51,7 @@ PYBIND11_MODULE(backend_binding, m) {
 
   py::class_<RoutePlanner>(m, "RoutePlanner")
       .def(py::init<Aircraft, float>(), py::arg("aircraft"),
-           py::arg("searchPercentage"))
+           py::arg("searchPercentage"), py::arg("moveLimit"))
       .def("findRoute", &RoutePlanner::findRoute)
       .def("findNearestUnscannedPosRow",
            &RoutePlanner::findNearestUnscannedPosRow)

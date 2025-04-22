@@ -398,8 +398,10 @@ std::vector<Moves> computePath(const std::pair<int, int> &curPos,
 
 } // namespace
 
-RoutePlanner::RoutePlanner(Aircraft aircraft, float searchPercentage)
-    : m_aircraft(aircraft), m_searchPercentage(searchPercentage) {
+RoutePlanner::RoutePlanner(Aircraft aircraft, float searchPercentage,
+                           int moveLimit)
+    : m_aircraft(aircraft), m_moveLimit(moveLimit),
+      m_searchPercentage(searchPercentage) {
   // searchPercentage is a float that must be between 0.01 (1%) and 1.0 (100%)
   if (searchPercentage < PERCENT1) {
     std::cerr << "searchPercentage must be at least 0.01 (1%). Updating value "
@@ -409,6 +411,11 @@ RoutePlanner::RoutePlanner(Aircraft aircraft, float searchPercentage)
     std::cerr << "searchPercentage cannot be greater than 1.0 (100%). Updating "
                  "value to 100%\n";
     m_searchPercentage = PERCENT100;
+  }
+
+  // moveLimit must be greater than zero
+  if (moveLimit < 1) {
+    m_moveLimit = 1;
   }
 }
 
@@ -427,10 +434,12 @@ std::vector<Moves> RoutePlanner::findRoute() {
   scannedCount = scannedCount + m_aircraft.scan();
   std::cout << "New scan count: " << scannedCount << ". Target is "
             << targetScanCount
-            << ". Remaining: " << targetScanCount - scannedCount << ".\n";
+            << ". Remaining: " << targetScanCount - scannedCount
+            << ". Potential moves remaining: " << m_moveLimit - m_totalMoves
+            << ".\n";
 
   // Continue looping until coverage requirement is hit
-  while (scannedCount < targetScanCount) {
+  while ((scannedCount < targetScanCount) && (m_totalMoves < m_moveLimit)) {
     std::cout << "Aircraft at [" << m_aircraft.getCurRow() << "]["
               << m_aircraft.getCurCol() << "]\n";
     // If moving forward is possible and beneficial
@@ -445,7 +454,9 @@ std::vector<Moves> RoutePlanner::findRoute() {
       scannedCount += m_aircraft.scan();
       std::cout << "New scan count: " << scannedCount << ". Target is "
                 << targetScanCount
-                << ". Remaining: " << targetScanCount - scannedCount << ".\n";
+                << ". Remaining: " << targetScanCount - scannedCount
+                << ". Potential moves remaining: " << m_moveLimit - m_totalMoves
+                << ".\n";
       // If forward move is blocked or no new Cells scanned, turn to continue
       // sweeping pattern
       // Try left move first
@@ -461,7 +472,9 @@ std::vector<Moves> RoutePlanner::findRoute() {
       scannedCount += m_aircraft.scan();
       std::cout << "New scan count: " << scannedCount << ". Target is "
                 << targetScanCount
-                << ". Remaining: " << targetScanCount - scannedCount << ".\n";
+                << ". Remaining: " << targetScanCount - scannedCount
+                << ". Potential moves remaining: " << m_moveLimit - m_totalMoves
+                << ".\n";
       // verify again that forward move is possible, then do it and scan
       if (forwardPositionValid(m_aircraft, m_aircraft.getMap())) {
         m_aircraft.moveForward();
@@ -472,7 +485,9 @@ std::vector<Moves> RoutePlanner::findRoute() {
         scannedCount += m_aircraft.scan();
         std::cout << "New scan count: " << scannedCount << ". Target is "
                   << targetScanCount
-                  << ". Remaining: " << targetScanCount - scannedCount << ".\n";
+                  << ". Remaining: " << targetScanCount - scannedCount
+                  << ". Potential moves remaining: "
+                  << m_moveLimit - m_totalMoves << ".\n";
       }
       // If left move doesn't work, try right move
     } else if (isTurnValid(m_aircraft, Moves::move_TURNRIGHT,
@@ -487,7 +502,9 @@ std::vector<Moves> RoutePlanner::findRoute() {
       scannedCount += m_aircraft.scan();
       std::cout << "New scan count: " << scannedCount << ". Target is "
                 << targetScanCount
-                << ". Remaining: " << targetScanCount - scannedCount << ".\n";
+                << ". Remaining: " << targetScanCount - scannedCount
+                << ". Potential moves remaining: " << m_moveLimit - m_totalMoves
+                << ".\n";
       // verify again that forward move is possible, then do it and scan
       if (forwardPositionValid(m_aircraft, m_aircraft.getMap())) {
         m_aircraft.moveForward();
@@ -498,7 +515,9 @@ std::vector<Moves> RoutePlanner::findRoute() {
         scannedCount += m_aircraft.scan();
         std::cout << "New scan count: " << scannedCount << ". Target is "
                   << targetScanCount
-                  << ". Remaining: " << targetScanCount - scannedCount << ".\n";
+                  << ". Remaining: " << targetScanCount - scannedCount
+                  << ". Potential moves remaining: "
+                  << m_moveLimit - m_totalMoves << ".\n";
       }
 
     } else {
@@ -531,37 +550,42 @@ std::vector<Moves> RoutePlanner::findRoute() {
 
       // Carry out every move required to get to the new position
       for (const auto &move : path) {
-        if (move == Moves::move_FORWARD) {
-          m_aircraft.moveForward();
-          m_totalMoves++;
-          std::cout << "MOVE FORWARD TO [" << m_aircraft.getCurRow() << "]["
-                    << m_aircraft.getCurCol() << "]\n";
-          m_moveList.push_back(Moves::move_FORWARD);
-          scannedCount += m_aircraft.scan();
-          std::cout << "New scan count: " << scannedCount << ". Target is "
-                    << targetScanCount
-                    << ". Remaining: " << targetScanCount - scannedCount
-                    << ".\n";
-        } else if (move == Moves::move_TURNLEFT) {
-          m_aircraft.turnLeft();
-          m_totalMoves++;
-          std::cout << "TURN LEFT\n";
-          m_moveList.push_back(Moves::move_TURNLEFT);
-          scannedCount += m_aircraft.scan();
-          std::cout << "New scan count: " << scannedCount << ". Target is "
-                    << targetScanCount
-                    << ". Remaining: " << targetScanCount - scannedCount
-                    << ".\n";
-        } else if (move == Moves::move_TURNRIGHT) {
-          m_aircraft.turnRight();
-          m_totalMoves++;
-          std::cout << "TURN RIGHT\n";
-          m_moveList.push_back(Moves::move_TURNRIGHT);
-          scannedCount += m_aircraft.scan();
-          std::cout << "New scan count: " << scannedCount << ". Target is "
-                    << targetScanCount
-                    << ". Remaining: " << targetScanCount - scannedCount
-                    << ".\n";
+        if ((scannedCount < targetScanCount) && (m_totalMoves < m_moveLimit)) {
+          if (move == Moves::move_FORWARD) {
+            m_aircraft.moveForward();
+            m_totalMoves++;
+            std::cout << "MOVE FORWARD TO [" << m_aircraft.getCurRow() << "]["
+                      << m_aircraft.getCurCol() << "]\n";
+            m_moveList.push_back(Moves::move_FORWARD);
+            scannedCount += m_aircraft.scan();
+            std::cout << "New scan count: " << scannedCount << ". Target is "
+                      << targetScanCount
+                      << ". Remaining: " << targetScanCount - scannedCount
+                      << ". Potential moves remaining: "
+                      << m_moveLimit - m_totalMoves << ".\n";
+          } else if (move == Moves::move_TURNLEFT) {
+            m_aircraft.turnLeft();
+            m_totalMoves++;
+            std::cout << "TURN LEFT\n";
+            m_moveList.push_back(Moves::move_TURNLEFT);
+            scannedCount += m_aircraft.scan();
+            std::cout << "New scan count: " << scannedCount << ". Target is "
+                      << targetScanCount
+                      << ". Remaining: " << targetScanCount - scannedCount
+                      << ". Potential moves remaining: "
+                      << m_moveLimit - m_totalMoves << ".\n";
+          } else if (move == Moves::move_TURNRIGHT) {
+            m_aircraft.turnRight();
+            m_totalMoves++;
+            std::cout << "TURN RIGHT\n";
+            m_moveList.push_back(Moves::move_TURNRIGHT);
+            scannedCount += m_aircraft.scan();
+            std::cout << "New scan count: " << scannedCount << ". Target is "
+                      << targetScanCount
+                      << ". Remaining: " << targetScanCount - scannedCount
+                      << ". Potential moves remaining: "
+                      << m_moveLimit - m_totalMoves << ".\n";
+          }
         }
       }
     }

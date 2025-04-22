@@ -19,8 +19,10 @@ public:
    * @param aircraft The Aircraft the RoutePlanner will be routing.
    * @param searchPercentage The percentage of traversable cells to be searched
    * for completion. Bounds checking ensures 0 <= searchPercentage <= 1.
+   * @param moveLimit. The number of moves the Aircraft is allowed to make to
+   * find a route.
    */
-  RoutePlanner(Aircraft aircraft, float searchPercentage);
+  RoutePlanner(Aircraft aircraft, float searchPercentage, int moveLimit);
   /*
    * @brief A router for the Aircraft, based on a modified version of lawn
    * mowing algorithms combined with A* search. Finds a route that scans 80% of
@@ -57,6 +59,8 @@ private:
   std::vector<Moves> m_moveList;
   int m_totalMoves =
       0; // The number of moves the Aircraft uses to complete its route
+  int m_moveLimit =
+      0; // The maximum number of moves the Aircraft is allowed to use
   float m_searchPercentage =
       0.0; // The percentage of traversable Cells to be scanned
 };
