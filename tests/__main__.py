@@ -3,25 +3,27 @@
 To run the module execute: `python -m tests`, in the project root dir.
 """
 
-from PIL import Image
-
 import backend_binding
+from PIL import Image
 
 if __name__ == "__main__":
     example_map_path: str = "./backend/unit_tests/test_csv/mediumTestGrid.csv"
 
     grid_map = backend_binding.GridMap(width=50, filePath=example_map_path)
 
-    aircraft = backend````````````````````_binding.Aircraft(
-            startRow=9,
-            startDir=backend_binding.Direction.SOUTH,
-            startCol=4,
-            map=grid_map,
-        )
-    
-    router = backend_binding.RoutePlanner(aircraft)
+    aircraft = backend_binding.Aircraft(
+        startRow=9,
+        startDir=backend_binding.Direction.SOUTH,
+        startCol=4,
+        map=grid_map,
+    )
+
+    router = backend_binding.RoutePlanner(
+        aircraft, searchPercentage=0.80, moveLimit=1_000_000
+    )
 
     route = router.findRoute()
+    print(route)
 
     rows: int = grid_map.getRowCount()
     cols: int = grid_map.getColCount()
@@ -42,35 +44,35 @@ if __name__ == "__main__":
     aircraft_col: int = aircraft.getCurCol()
 
     pixels[aircraft_row, aircraft_col] = (0, 255, 255)
-    direction: str = 'S'
+    direction: str = "S"
     for move in route[1:]:
         if move == backend_binding.Moves.FORWARD:
-            if direction == 'N':
+            if direction == "N":
                 aircraft_row -= 1
-            elif direction == 'E':
+            elif direction == "E":
                 aircraft_col += 1
-            elif direction == 'S':
+            elif direction == "S":
                 aircraft_row += 1
-            elif direction == 'W':
+            elif direction == "W":
                 aircraft_col -= 1
         elif move == backend_binding.Moves.TURNLEFT:
-            if direction == 'N':
-                direction = 'W'
-            elif direction == 'E':
-                direction = 'N'
-            elif direction == 'S':
-                direction = 'E'
-            elif direction == 'W':
-                direction = 'S'
+            if direction == "N":
+                direction = "W"
+            elif direction == "E":
+                direction = "N"
+            elif direction == "S":
+                direction = "E"
+            elif direction == "W":
+                direction = "S"
         elif move == backend_binding.Moves.TURNRIGHT:
-            if direction == 'N':
-                direction = 'E'
-            elif direction == 'E':
-                direction = 'S'
-            elif direction == 'S':
-                direction = 'W'
-            elif direction == 'W':
-                direction = 'N'
+            if direction == "N":
+                direction = "E"
+            elif direction == "E":
+                direction = "S"
+            elif direction == "S":
+                direction = "W"
+            elif direction == "W":
+                direction = "N"
         pixels[aircraft_row, aircraft_col] = (255, 0, 0)
 
     img = img.resize((img.width * 10, img.height * 10), resample=Image.NEAREST)
