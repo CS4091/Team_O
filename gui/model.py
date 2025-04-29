@@ -46,6 +46,7 @@ class Model:
             model.
         """
         self.route = []
+        del self.aircraft
         self._grid_map = new_grid_map
 
     @grid_map.deleter
@@ -56,7 +57,9 @@ class Model:
         """
         # TODO - add more detail as needed
         self.route = []
-        del self._grid_map
+        self._grid_map = None
+        del self._aircraft
+        del self._router
 
     @property
     def aircraft(self) -> backend_binding.Aircraft:
@@ -77,6 +80,7 @@ class Model:
             model.
         """
         self.route = []
+        del self.router
         self._aircraft = new_aircraft
 
     @aircraft.deleter
@@ -87,7 +91,8 @@ class Model:
         """
         # TODO - add more detail as needed
         self.route = []
-        del self._aircraft
+        self._aircraft = None
+        del self._router
 
     @property
     def router(self) -> backend_binding.RoutePlanner:
@@ -118,4 +123,4 @@ class Model:
         """
         # TODO - add more detail as needed
         self.route = []
-        del self._router
+        self.router = None

@@ -82,12 +82,20 @@ class Controller:
             row (int): Starting row value.
             column (int): Starting column value.
         """
+        print(row, column, "FFFFFFFFFFf")
         if not self.model.grid_map:
             self.view.show_error("No map yet!")
+            return
+        if (
+            row >= self.model.grid_map.getRowCount()
+            or column >= self.model.grid_map.getColCount()
+        ):
+            self.view.show_error("Invalid Aircraft Position! (Out of bounds)")
             return
         if not self.model.grid_map.isTraversable(row, column):
             self.view.show_error("Invalid Aircraft Position!")
             return
+
         self.model.aircraft = backend_binding.Aircraft(
             startRow=row,
             startCol=column,
