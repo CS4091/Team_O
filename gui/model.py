@@ -1,6 +1,9 @@
-"""Model for the MVC Tkinter GUI."""
+"""
+Model module for the MVC Tkinter GUI.
 
-import csv
+This module defines the Model class, which manages the state and data
+for the application, including the grid map and the routing logic.
+"""
 
 import backend_binding
 
@@ -17,19 +20,12 @@ class Model:
     """
 
     def __init__(self) -> None:
-        """Initialize the instance of the Model."""
+        """Construct of the Model component."""
         self._grid_map = None
+        self._aircraft = None
         self._router = None
-        self.data = []
 
-    # temp solution to show csv file until backend_binding works
-    def load_csv(self, filepath):
-        with open(filepath, newline="", encoding="utf-8") as csvfile:
-            reader = csv.reader(csvfile)
-            return list(reader)
-
-    def get_data(self):
-        return self.data
+        self.route: list[backend_binding.Moves] = []
 
     @property
     def grid_map(self) -> backend_binding.GridMap:
@@ -49,6 +45,7 @@ class Model:
             new_grid_map (backend_binding.GridMap): The new Grid-Map for the
             model.
         """
+        self.route = []
         self._grid_map = new_grid_map
 
     @grid_map.deleter
@@ -58,7 +55,39 @@ class Model:
         TODO: Fully implement if needed.
         """
         # TODO - add more detail as needed
+        self.route = []
         del self._grid_map
+
+    @property
+    def aircraft(self) -> backend_binding.Aircraft:
+        """Get the Aircraft that will be traversing the environment.
+
+        Returns:
+            backend_binding.Aircraft: Aircraft implementation from the C++
+                backend. Done via PyBind11.
+        """
+        return self._aircraft
+
+    @aircraft.setter
+    def aircraft(self, new_aircraft: backend_binding.Aircraft) -> None:
+        """Set the Aircraft.
+
+        Args:
+            new_aircraft (backend_binding.Aircraft): The new Aircraft for the
+            model.
+        """
+        self.route = []
+        self._aircraft = new_aircraft
+
+    @aircraft.deleter
+    def aircraft(self) -> None:
+        """Delete the Aircraft.
+
+        TODO: Fully implement if needed.
+        """
+        # TODO - add more detail as needed
+        self.route = []
+        del self._aircraft
 
     @property
     def router(self) -> backend_binding.RoutePlanner:
@@ -78,6 +107,7 @@ class Model:
             new_router (backend_binding.RoutePlanner): The new Route Planner
             for the model.
         """
+        self.route = []
         self._router = new_router
 
     @router.deleter
@@ -87,12 +117,5 @@ class Model:
         TODO: Fully implement if needed.
         """
         # TODO - add more detail as needed
+        self.route = []
         del self._router
-
-    def save_map(self):
-        """
-        Save the map to a file
-        :return:
-        """
-        with open("map_file.txt", "a") as f:
-            f.write(self.map)

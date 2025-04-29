@@ -1,4 +1,9 @@
-# import backend_binding
+"""Main application module.
+
+This module initializes the Tkinter root window and combines all components of
+the Model-View-Controller application.
+"""
+
 import tkinter as tk
 
 from .controller import Controller
@@ -7,7 +12,10 @@ from .view import View
 
 
 class App(tk.Tk):
-    def __init__(self):
+    """Tkinter MVC application."""
+
+    def __init__(self) -> None:
+        """Application constructor."""
         super().__init__()
 
         # set title for window
@@ -24,7 +32,6 @@ class App(tk.Tk):
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
 
-
         # find the center point
         center_x = int(screen_width / 2 - window_width / 2)
         center_y = int(screen_height / 2 - window_height / 2)
@@ -39,7 +46,7 @@ class App(tk.Tk):
         self.rowconfigure(0, weight=1)
         # create the model
         model = Model()
-        
+
         # create the view and place it on the root window
         view = View(self)
         self.config(menu=view.menu_bar)
