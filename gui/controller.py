@@ -82,7 +82,6 @@ class Controller:
             row (int): Starting row value.
             column (int): Starting column value.
         """
-        print(row, column, "FFFFFFFFFFf")
         if not self.model.grid_map:
             self.view.show_error("No map yet!")
             return
