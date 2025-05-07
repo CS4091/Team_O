@@ -11,3 +11,7 @@ root_dir: str = os.path.dirname(gui_dir)
 backend_dir: str = os.path.join(root_dir, "backend")
 backend_build_dir: str = os.path.join(backend_dir, "build")
 sys.path.append(backend_build_dir)
+
+if os.name == "nt":  # In Windows
+    win_backend_build_dir: str = os.path.join(backend_build_dir, "Release")
+    sys.path.append(win_backend_build_dir)

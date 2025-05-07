@@ -43,8 +43,8 @@ class App(ttkthemes.ThemedTk):
         # set the position of the window to the center of the screen
         self.geometry(f"{window_width}x{window_height}+{center_x}+{center_y}")
 
-        # set the window so that it cant be resized
-        self.resizable(False, False)
+        # set the window so that it cant be resized, JK LOL
+        self.resizable(True, True)
 
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
