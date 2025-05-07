@@ -4,19 +4,23 @@ This module initializes the Tkinter root window and combines all components of
 the Model-View-Controller application.
 """
 
-import tkinter as tk
+# import tkinter as tk
+import ttkthemes
 
 from .controller import Controller
 from .model import Model
 from .view import View
 
+# THEME ="scidgreen"
+THEME = "radiance"
 
-class App(tk.Tk):
+
+class App(ttkthemes.ThemedTk):
     """Tkinter MVC application."""
 
     def __init__(self) -> None:
         """Application constructor."""
-        super().__init__()
+        super().__init__(theme=THEME)
 
         # set title for window
         self.title("Air-to-Ground Search Demo")
