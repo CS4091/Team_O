@@ -29,6 +29,7 @@ class View(ttk.Frame):
         """Construct for the View component."""
         super().__init__(parent)
 
+        # grid
         self.grid(row=0, column=0, sticky="nsew")
 
         # configure this frame's grid to expand
@@ -57,21 +58,29 @@ class View(ttk.Frame):
 
         # buttons for map frame
         self.map_frame_button1 = ttk.Button(
-            self.map_frame, text="Previous Route"
+            self.map_frame,
+            text="Previous Route",
+            command=self.previous_button_clicked,
         )
         self.map_frame_button1.grid(
             column=0, row=0, padx=10, sticky=tk.W + tk.E
         )
 
-        self.map_frame_button2 = ttk.Button(self.map_frame, text="Save Route")
+        self.map_frame_button2 = ttk.Button(
+            self.map_frame, text="Save Route", command=self.save_button_clicked
+        )
         self.map_frame_button2.grid(column=1, row=0, padx=10)
 
-        self.map_frame_button3 = ttk.Button(self.map_frame, text="Next Route")
+        self.map_frame_button3 = ttk.Button(
+            self.map_frame, text="Next Route", command=self.next_button_clicked
+        )
         self.map_frame_button3.grid(column=2, row=0, padx=10)
 
         # canvas for CSV file
         self.canvas = tk.Canvas(self.map_frame)
-        self.canvas.grid(column=0, row=1, columnspan=3, sticky=tk.NSEW)
+        self.canvas.grid(column=1, row=1, columnspan=3, sticky=tk.NSEW)
+
+        self.canvas.bind("<Configure>", self._resize_canvas)
 
         # menu bar
         self.menu_bar = Menu(self)
@@ -128,6 +137,20 @@ class View(ttk.Frame):
         )
         self.map_frame_button4.grid(column=3, row=0, padx=10)
 
+    def _resize_canvas(self, event) -> None:
+        """Private method used for automatically resizing the map."""
+        if self.controller is not None:
+            self.display_map(
+                self.controller.get_grid_map(), self.controller.get_aircraft()
+            )
+            if self.controller.get_route():
+                self.draw_route(
+                    self.controller.get_grid_map(),
+                    self.controller.get_aircraft(),
+                    self.controller.get_route(),
+                    animate=False,
+                )
+
     def set_controller(self, controller: Controller) -> None:
         """Set the controller
         :param controller:
@@ -141,7 +164,23 @@ class View(ttk.Frame):
         :return:
         """
         if self.controller:
-            self.controller.save_map()
+            self.controller.save()
+
+    def previous_button_clicked(self) -> None:
+        """
+        Handle button click event
+        :return:
+        """
+        if self.controller:
+            self.controller.previous_route()
+
+    def next_button_clicked(self) -> None:
+        """
+        Handle button click event
+        :return:
+        """
+        if self.controller:
+            self.controller.next_route()
 
     def show_success(self, message: str, timeout: int = 3000) -> None:
         """
@@ -184,6 +223,8 @@ class View(ttk.Frame):
         grid_map: backend_binding.GridMap,
         aircraft: backend_binding.Aircraft | None = None,
     ) -> None:
+        """Draws the Map as a grid with appropriate colors."""
+
         # clear previous drawings
         self.canvas.delete("all")
 
@@ -343,7 +384,6 @@ class View(ttk.Frame):
             color: str = "red"
 
             if aircraft_row == start_row and aircraft_col == start_col:
-                print(aircraft_row, aircraft_col, direction)
                 color = "blue"
                 # continue  # do not draw over starting position.
 

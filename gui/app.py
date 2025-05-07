@@ -4,19 +4,23 @@ This module initializes the Tkinter root window and combines all components of
 the Model-View-Controller application.
 """
 
-import tkinter as tk
+# import tkinter as tk
+import ttkthemes
 
 from .controller import Controller
 from .model import Model
 from .view import View
 
+# THEME ="scidgreen"
+THEME = "radiance"
 
-class App(tk.Tk):
+
+class App(ttkthemes.ThemedTk):
     """Tkinter MVC application."""
 
     def __init__(self) -> None:
         """Application constructor."""
-        super().__init__()
+        super().__init__(theme=THEME)
 
         # set title for window
         self.title("Air-to-Ground Search Demo")
@@ -39,8 +43,8 @@ class App(tk.Tk):
         # set the position of the window to the center of the screen
         self.geometry(f"{window_width}x{window_height}+{center_x}+{center_y}")
 
-        # set the window so that it cant be resized
-        self.resizable(False, False)
+        # set the window so that it cant be resized, JK LOL
+        self.resizable(True, True)
 
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)

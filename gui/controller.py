@@ -33,24 +33,67 @@ class Controller:
         self.view = view
         self.test_model = Model()
 
-    # def save(self, map) -> None:
-    #     """
-    #     Save the map
-    #     :param map:
-    #     :return:
-    #     """
-    #     try:
+    def save(self) -> None:
+        """
+        Save the current state.
+        :param map:
+        :return:
+        """
+        try:
+            if self.model.grid_map is None:
+                return
 
-    #         # save the model
-    #         self.model.map = map
-    #         self.model.save()
+            # save the model
+            self.model.save()
 
-    #         # show a success message
-    #         self.view.show_success(f"The map {map} saved!")
+            # show a success message
+            self.view.show_success("The route has been saved!")
 
-    #     except ValueError as error:
-    #         # show an error message
-    #         self.view.show_error(error)
+        except ValueError as error:
+            # show an error message
+            self.view.show_error(error)
+
+    def previous_route(self) -> None:
+        """Set the current state to the state before."""
+        if self.model.current_state - 1 < 0:
+            return
+        self.model.current_state = max(0, self.model.current_state - 1)
+        self.view.show_success(f"Showing State #{self.model.current_state}")
+        self.model.update_from_previous_state(self.model.current_state)
+        self.redraw_everything()
+
+    def next_route(self) -> None:
+        """Set the current state to the state after."""
+        if self.model.current_state + 1 > len(self.model.states) - 1:
+            return
+        self.model.current_state = min(
+            len(self.model.states) - 1, self.model.current_state + 1
+        )
+        self.view.show_success(f"Showing State #{self.model.current_state}")
+        self.model.update_from_previous_state(self.model.current_state)
+        self.redraw_everything()
+
+    def redraw_everything(self) -> None:
+        """Redraws everything for the state."""
+        self.view.display_map(self.get_grid_map(), self.get_aircraft())
+        if self.get_route():
+            self.view.draw_route(
+                self.get_grid_map(),
+                self.get_aircraft(),
+                self.get_route(),
+                animate=False,
+            )
+
+    def get_grid_map(self) -> backend_binding.GridMap:
+        """Get the Grid Map from the model."""
+        return self.model.grid_map
+
+    def get_aircraft(self) -> backend_binding.Aircraft:
+        """Get the Aircraft from the model."""
+        return self.model.aircraft
+
+    def get_route(self) -> list[backend_binding.Moves]:
+        return self.model.route
 
     def select_file(self) -> None:
         """Select a file to display."""
